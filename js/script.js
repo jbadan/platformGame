@@ -93,14 +93,18 @@ var mainState = {
         star = stars.create(20, 125, 'star');
         star = stars.create(650, 125, 'star');
 
-        //Idle aliens
+        //Idle aliens 
         alienIdle = game.add.group();
         alienIdle.enableBody = true;
         alienIdleRight = alienIdle.create(350, 500, 'alienIdleRight');
 
-        //moving aliens 
-
-        
+        //moving aliens (extended sprite);
+        var alienThatMoves = new AlienMoving(this.game, 400, 435, 'alienSprite', 0);  
+        this.game.add.existing(alienThatMoves);
+        alienThatMoves = new AlienMoving(this.game, 600, 310, 'alienSprite', 0);  
+        this.game.add.existing(alienThatMoves);
+         alienThatMoves = new AlienMoving(this.game, 200, 235, 'alienSprite', 0);  
+        this.game.add.existing(alienThatMoves);
 
         // starter score
         scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#ffffff' });
