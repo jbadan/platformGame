@@ -1,12 +1,44 @@
+/*TO DO LEVEL 1:
+put creating info in JSON file
+platforms
+    -find better image
+    -make variable lengths 
+obstacles
+    -spikes on ground
+lives logic
+    -3 lives- display next to score
+high score
+    -display above current score
+    -store in local storage
+enemies:
+    shoot
+    different types
+astronaut:
+    add gun  
+        -update spritesheet to include shooting
+        -shooting logic
+
+EXTRAS:
+-choose different player icon
+-powerup?- move faster 10 seconds, jump higher 10 seconds
+-laser blocking path 
+
+CURRENT BUGS:
+-death animation
+-time delay for restart after death sound
+
+*/
+
 //alien sprites 
 function AlienMoving(game, x, y){
     Phaser.Sprite.call(this, game, x, y, 'alienSprite');
     // anchor
     this.anchor.set(0.5);
     // animation
-    this.animations.add('patrol', [12,13,14,15,16,17,18,19,20,21,22,23], 8, true); 
-    this.animations.add('die', [24,25], 1);
-    this.animations.play('patrol');
+    this.animations.add('patrolRight', [12,13,14,15,16,17,18,19,20,21,22,23], 8, true);
+    this.animations.add('patrolLeft', [0,1,2,3,4,5,6,7,8,9,10,11], 8, true); 
+    this.animations.add('die', [24,25], .1);
+    this.animations.play('patrolRight');
 
     // physic properties
     this.game.physics.enable(this);
@@ -17,6 +49,28 @@ AlienMoving.SPEED = 100;
 
 AlienMoving.prototype = Object.create(Phaser.Sprite.prototype);
 AlienMoving.prototype.constructor = AlienMoving;
+
+AlienMoving.prototype.update = function(){
+    if (this.body.touching.right || this.body.blocked.right) {
+        // turn left
+        this.body.velocity.x = -AlienMoving.SPEED; 
+        this.animations.play('patrolLeft');
+    }
+    else if (this.body.touching.left || this.body.blocked.left) {
+        this.body.velocity.x = AlienMoving.SPEED; 
+        // turn right
+        this.animations.play('patrolRight');
+    }
+};
+
+//THIS IS NOT WORKING - or maybe the animation is just too fast? idk
+AlienMoving.prototype.die = function () {
+    this.body.enable = false;
+    this.animations.play('die').onComplete.addOnce(function () {
+        this.killAlienIdle();
+    }, this);
+};
+
 
 
 var player;
@@ -33,6 +87,7 @@ var mainState = {
         game.load.image('background', 'img/bg1.jpg');
         game.load.image('baseGround', 'img/ground.png');
         game.load.image('ground', 'img/platform2.png');
+        game.load.image('invisibleWall', 'img/invisible_wall.png');
         game.load.image('star', 'img/star.png');
         game.load.image('alienIdleRight', 'img/alienIdleRight.png');
         game.load.spritesheet('alienSprite', 'img/alienSpritesheet.png', 90, 93);
@@ -40,6 +95,7 @@ var mainState = {
         game.load.audio('jumpNoise', 'sound/jump.wav');
         game.load.audio('killNoise', 'sound/hit.wav');
         game.load.audio('starNoise', 'sound/star.wav');
+        game.load.audio('deathNoise', 'sound/sadTrombone.wav');
     },
     create: function() {
         //background
@@ -72,6 +128,25 @@ var mainState = {
         ledge = platforms.create(500, 150, 'ground');
         ledge.body.immovable = true;
 
+        //make invisible walls to stop aliens
+        //figure out a function to make this easier? 
+        walls = game.add.group();
+        walls.enableBody = true;
+        walls.allowGravity = false; 
+        walls.visible = false;
+        var wall = walls.create(374, 433, 'invisibleWall');
+        wall.body.immovable = true;
+        wall = walls.create(630, 433, 'invisibleWall');
+        wall.body.immovable = true;
+        wall = walls.create(564, 310, 'invisibleWall');
+        wall.body.immovable = true;
+        wall = walls.create(808, 310, 'invisibleWall');
+        wall.body.immovable = true;
+        wall = walls.create(170, 230, 'invisibleWall');
+        wall.body.immovable = true;
+        wall = walls.create(430, 230, 'invisibleWall');
+        wall.body.immovable = true;
+
         // make astronaut
         player = game.add.sprite(75, 85, 'astronaut');
         game.physics.arcade.enable(player);
@@ -99,12 +174,17 @@ var mainState = {
         alienIdleRight = alienIdle.create(350, 500, 'alienIdleRight');
 
         //moving aliens (extended sprite);
+        aliensThatMoveGroup = game.add.group();
+        aliensThatMoveGroup.enableBody = true;
         var alienThatMoves = new AlienMoving(this.game, 400, 435, 'alienSprite', 0);  
         this.game.add.existing(alienThatMoves);
+        aliensThatMoveGroup.add(alienThatMoves);
         alienThatMoves = new AlienMoving(this.game, 600, 310, 'alienSprite', 0);  
         this.game.add.existing(alienThatMoves);
+        aliensThatMoveGroup.add(alienThatMoves);
          alienThatMoves = new AlienMoving(this.game, 200, 235, 'alienSprite', 0);  
         this.game.add.existing(alienThatMoves);
+        aliensThatMoveGroup.add(alienThatMoves);
 
         // starter score
         scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#ffffff' });
@@ -116,9 +196,13 @@ var mainState = {
         game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(stars, platforms);
         game.physics.arcade.collide(alienIdle, platforms);
+        game.physics.arcade.collide(aliensThatMoveGroup, platforms);
+        game.physics.arcade.collide(aliensThatMoveGroup, walls);
+
 
         game.physics.arcade.overlap(player, stars, this.collectStar, null, this);
         game.physics.arcade.overlap(player, alienIdle, this.killAlienIdle, null, this);
+        game.physics.arcade.overlap(player, aliensThatMoveGroup, this.killAlienIdle, null, this);
         //Reset the players velocity so he doesn't slide around
         player.body.velocity.x = 0;
         //movements attached to keys
@@ -145,18 +229,25 @@ var mainState = {
     },
 
     killAlienIdle: function(player, alienIdleRight){
-           if(alienIdleRight.body.touching.up ){      
-            player.body.velocity.y = -200;              
-            alienIdleRight.kill();
+        if(alienIdleRight.body.touching.up ){      
+            player.body.velocity.y = -200;  
+            alienIdleRight.kill();         
             game.sound.play('killNoise');
             score +=15;
             scoreText.text = 'Score: ' + score;    
-        }else{             
+        }else{ 
+            //WHY IS IT SLOWING DOWN THE SOUND TOO??
+            game.sound.play('deathNoise');
+            resetToStart();            
             lives -=1; 
-            game.state.start('main');
+            // game.time.events.add(Phaser.Timer.SECOND * 2, resetToStart, this).autoDestroy = true;
         }
 
     }
+}
+
+function resetToStart(){
+    game.state.start('main');
 }
 
 var game = new Phaser.Game(800, 800);
