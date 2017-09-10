@@ -3,8 +3,9 @@ put creating info in JSON file
 platforms
     -find better image
     -make variable lengths 
+    -spacing on 2nd platform makes it really hard to win
 obstacles
-    -spikes on ground
+    -spikes/toxic sludge on ground
 lives logic
     -3 lives- display next to score
 high score
