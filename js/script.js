@@ -30,6 +30,8 @@ CURRENT BUGS:
 
 */
 
+//EXTERNAL SPRITES
+
 //alien sprites 
 function AlienMoving(game, x, y){
     Phaser.Sprite.call(this, game, x, y, 'alienSprite');
@@ -80,8 +82,13 @@ var cursors;
 
 var stars;
 var score = 0;
+var starPickupCount = 0;
 var lives = 3; 
 var scoreText;
+var starCountText;
+
+
+//GAMEPLAY MAIN STATE 
 
 var mainState = {
     preload: function() {
@@ -189,6 +196,8 @@ var mainState = {
 
         // starter score
         scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#ffffff' });
+        starCountText = game.add.text(42, 50, 'x 0', { fontSize: '22px', fill: '#ffffff' });
+        this.game.add.image(16, 50, 'star');
         //controls
         cursors = game.input.keyboard.createCursorKeys();  
     },
@@ -226,7 +235,9 @@ var mainState = {
         star.kill();
         game.sound.play('starNoise');
         score += 10;
+        starPickupCount++; 
         scoreText.text = 'Score: ' + score;
+        starCountText.text = 'x '+ starPickupCount; 
     },
 
     killAlienIdle: function(player, alienIdleRight){
@@ -235,7 +246,7 @@ var mainState = {
             alienIdleRight.kill();         
             game.sound.play('killNoise');
             score +=15;
-            scoreText.text = 'Score: ' + score;    
+            scoreText.text = 'Score: ' + score;  
         }else{ 
             //WHY IS IT SLOWING DOWN THE SOUND TOO??
             game.sound.play('deathNoise');
@@ -251,7 +262,17 @@ function resetToStart(){
     game.state.start('main');
 }
 
+//BEGINS GAME
+
 var game = new Phaser.Game(800, 800);
 game.state.add('main', mainState);  
 game.state.start('main');
 
+
+
+/*Resources: 
+http://blog.kumansenu.com/2016/04/patrolling-enemy-ai-with-phaser/
+https://hacks.mozilla.org/2017/04/html5-games-workshop-make-a-platformer-game-with-javascript/
+
+
+*/

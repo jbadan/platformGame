@@ -1,0 +1,36 @@
+
+  {
+    "aliens": [
+        {"x": 121, "y": 399}, 
+        {"x": 800, "y": 362}, 
+        {"x": 500, "y": 147}]
+
+}
+
+        // var ledge = platforms.create(200, 600, 'ground');
+        // ledge.body.immovable = true;
+
+        // ledge = platforms.create(400, 475, 'ground');
+        // ledge.body.immovable = true;
+
+        // ledge = platforms.create(600, 350, 'ground');
+        // ledge.body.immovable = true;
+
+        // ledge = platforms.create(200, 275, 'ground');
+        // ledge.body.immovable = true;
+
+        // ledge = platforms.create(-150, 150, 'ground');
+        // ledge.body.immovable = true;
+
+        // ledge = platforms.create(500, 150, 'ground');
+        // ledge.body.immovable = true;
+
+
+        //         stars = game.add.group();
+        // stars.enableBody = true;
+        // star = stars.create(350, 575, 'star');
+        // star = stars.create(480, 450, 'star');
+        // star = stars.create(650, 325, 'star');
+        // star = stars.create(200, 250, 'star');
+        // star = stars.create(20, 125, 'star');
+        // star = stars.create(650, 125, 'star');
