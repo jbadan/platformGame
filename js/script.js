@@ -28,7 +28,6 @@ sound:
 EXTRAS:
 -choose different player icon
 -powerup?- move faster 10 seconds, jump higher 10 seconds
--laser blocking path 
 
 CURRENT BUGS:
 -death animation
@@ -120,8 +119,8 @@ var mainState = {
         game.load.image('spikes', 'img/spikes.png');
         game.load.image('heartFull', 'img/hud_heartFull.png');
         game.load.image('heartEmpty', 'img/hud_heartEmpty.png');
-        game.load.image('buttonPressed', 'img/buttonGreen_pressed_50.png');
-        game.load.image('button', 'img/buttonGreen_50.png');
+        game.load.image('buttonPressed', 'img/buttonRed_pressed_50.png');
+        game.load.image('button', 'img/buttonRed_50.png');
         game.load.image('laser', 'img/laserRight_50.png');
         game.load.image('laserBeam', 'img/laserRedHorizontal.png');
 
@@ -188,9 +187,14 @@ var mainState = {
         laser.body.immovable = true;
 
         //laser beam
-        laserBeam = lasers.create(426, 548, 'laserBeam');
+        laserBeam = lasers.create(426, 546, 'laserBeam');
         laserBeam.body.immovable = true;
         laserBeam.scale.setTo(6 ,1);
+        var tween = game.add.tween(laserBeam);
+        tween.to({y:laserBeam.y + 2}, 800, Phaser.Easing.Sinusoidal.InOut);
+        tween.yoyo(true);
+        tween.loop();
+        tween.start();
 
         //make invisible walls to stop aliens
         walls = game.add.group();
@@ -295,6 +299,7 @@ var mainState = {
     toggleButton: function(player, button){
       if(button.body.touching.up){
         button.kill();
+        laser.kill();
         laserBeam.kill();
         this.game.add.image(700, 314, 'buttonPressed');
       }  
