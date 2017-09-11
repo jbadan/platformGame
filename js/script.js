@@ -18,6 +18,8 @@ astronaut:
     add gun  
         -update spritesheet to include shooting
         -shooting logic
+    add jumping/stopped/falling spritesheet
+    -https://mozdevs.github.io/html5-games-workshop/en/guides/platformer/animations-for-the-main-character/
 
 EXTRAS:
 -choose different player icon
@@ -81,11 +83,14 @@ var platforms;
 var cursors;
 
 var stars;
+var key; 
+var rocket;
 var score = 0;
 var starPickupCount = 0;
 var lives = 3; 
 var scoreText;
 var starCountText;
+var hasKey = false; 
 
 
 //GAMEPLAY MAIN STATE 
@@ -98,8 +103,14 @@ var mainState = {
         game.load.image('invisibleWall', 'img/invisible_wall.png');
         game.load.image('star', 'img/star.png');
         game.load.image('alienIdleRight', 'img/alienIdleRight.png');
+        game.load.image('rocket', 'img/playerShip1_orange.png');
+        game.load.image('key', 'img/hud_keyBlue.png');
+        game.load.image('keyDisabled', 'img/hud_keyBlue_disabled.png');
+
         game.load.spritesheet('alienSprite', 'img/alienSpritesheet.png', 90, 93);
+        game.load.spritesheet('spikes', 'img/spike-animation.png', 25, 21);
         game.load.spritesheet('astronaut', 'img/astronaut.png', 75, 85);
+        
         game.load.audio('jumpNoise', 'sound/jump.wav');
         game.load.audio('killNoise', 'sound/hit.wav');
         game.load.audio('starNoise', 'sound/star.wav');
@@ -120,21 +131,26 @@ var mainState = {
         // platform ledges
         var ledge = platforms.create(200, 600, 'ground');
         ledge.body.immovable = true;
-
         ledge = platforms.create(400, 475, 'ground');
         ledge.body.immovable = true;
-
         ledge = platforms.create(600, 350, 'ground');
         ledge.body.immovable = true;
-
         ledge = platforms.create(200, 275, 'ground');
         ledge.body.immovable = true;
-
         ledge = platforms.create(-150, 150, 'ground');
         ledge.body.immovable = true;
-
         ledge = platforms.create(500, 150, 'ground');
         ledge.body.immovable = true;
+
+        //spikes
+
+        // spikesGroup = game.add.group();
+        // spikesGroup.enableBody = true;
+        // spikesGroup.allowGravity = false; 
+        // spikesGroup.body.immovable = true; 
+        // spikes.animation.add('active', [0,1,2,3,4], 10, true);
+        // var spike = spikesGroup.create(600, 350, 'spikes');
+        
 
         //make invisible walls to stop aliens
         //figure out a function to make this easier? 
@@ -162,9 +178,16 @@ var mainState = {
         player.body.gravity.y = 300;
         player.body.collideWorldBounds = true;
 
-        //  movement
+        //astronaut movement
         player.animations.add('left', [1, 3, 5, 7, 9, 11, 13], 10, true);
         player.animations.add('right', [0, 2, 4, 6, 8, 10, 12], 10, true);
+
+        //key
+        var keys = game.add.group();
+        keys.enableBody = true;
+        keys.allowGravity = false;
+        key = keys.create(600, 720, 'key');
+        key.anchor.setTo(0.5, 1);
 
         // stars!
         stars = game.add.group();
@@ -175,6 +198,7 @@ var mainState = {
         star = stars.create(200, 250, 'star');
         star = stars.create(20, 125, 'star');
         star = stars.create(650, 125, 'star');
+
 
         //Idle aliens 
         alienIdle = game.add.group();
@@ -198,6 +222,7 @@ var mainState = {
         scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#ffffff' });
         starCountText = game.add.text(42, 50, 'x 0', { fontSize: '22px', fill: '#ffffff' });
         this.game.add.image(16, 50, 'star');
+        this.game.add.image(16, 80, 'keyDisabled');
         //controls
         cursors = game.input.keyboard.createCursorKeys();  
     },
@@ -208,14 +233,20 @@ var mainState = {
         game.physics.arcade.collide(alienIdle, platforms);
         game.physics.arcade.collide(aliensThatMoveGroup, platforms);
         game.physics.arcade.collide(aliensThatMoveGroup, walls);
+        // game.physics.arcade.collide(keys, platforms);
 
 
         game.physics.arcade.overlap(player, stars, this.collectStar, null, this);
         game.physics.arcade.overlap(player, alienIdle, this.killAlienIdle, null, this);
         game.physics.arcade.overlap(player, aliensThatMoveGroup, this.killAlienIdle, null, this);
+        game.physics.arcade.overlap(player, key, this.collectKey, null, this);
+        game.physics.arcade.overlap(player, rocket, this.rocketLaunch, function(player, rocket){
+            return this.hasKey && player.body.touching.down;
+        }, this);
         //Reset the players velocity so he doesn't slide around
         player.body.velocity.x = 0;
-        //movements attached to keys
+
+        //astronaut movements attached to keys
         if (cursors.left.isDown){
             player.body.velocity.x = -150;
             player.animations.play('left');
@@ -230,7 +261,9 @@ var mainState = {
             player.body.velocity.y = -350;
             game.sound.play('jumpNoise');
         }
+
     },
+
     collectStar: function(player, star) {
         star.kill();
         game.sound.play('starNoise');
@@ -238,6 +271,28 @@ var mainState = {
         starPickupCount++; 
         scoreText.text = 'Score: ' + score;
         starCountText.text = 'x '+ starPickupCount; 
+        // if(starPickupCount>=1){
+        //     //add key
+        //     var keys = game.add.group();
+        //     key = keys.create(600, 720, 'key');
+        //     key.anchor.setTo(0.5, 1);
+        //     // key.body.allowGravity = false;
+        //     game.physics.arcade.overlap(player, key, this.collectKey, null, this);
+        // }
+    },
+
+    collectKey: function(player, key){
+        key.kill();
+        hasKey = true; 
+        this.game.add.image(16, 80, 'key');
+        //add rocket
+        var bgDecoration = game.add.group();
+        rocket = bgDecoration.create(290, 275, 'rocket');
+        rocket.anchor.setTo(0.5, 1);
+        game.physics.enable(rocket);
+        rocket.body.allowGravity = false;
+        // game.physics.arcade.overlap(player, rocket, this.rocketLaunch, null, this);
+
     },
 
     killAlienIdle: function(player, alienIdleRight){
@@ -254,12 +309,19 @@ var mainState = {
             lives -=1; 
             // game.time.events.add(Phaser.Timer.SECOND * 2, resetToStart, this).autoDestroy = true;
         }
-
+    },
+    rocketLaunch: function(player, rocket){
+        rocket.body.velocity.y = -500;
+        player.kill();
     }
 }
 
 function resetToStart(){
     game.state.start('main');
+    hasKey = false;
+    score = 0;
+    starPickupCount = 0;
+
 }
 
 //BEGINS GAME
@@ -273,6 +335,6 @@ game.state.start('main');
 /*Resources: 
 http://blog.kumansenu.com/2016/04/patrolling-enemy-ai-with-phaser/
 https://hacks.mozilla.org/2017/04/html5-games-workshop-make-a-platformer-game-with-javascript/
-
+http://kenney.nl/
 
 */
