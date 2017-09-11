@@ -85,6 +85,7 @@ AlienMoving.prototype.die = function () {
 var player;
 var platforms;
 var cursors;
+var spikesGroup; 
 
 var stars;
 var key; 
@@ -110,9 +111,12 @@ var mainState = {
         game.load.image('rocket', 'img/playerShip1_orange.png');
         game.load.image('key', 'img/hud_keyBlue.png');
         game.load.image('keyDisabled', 'img/hud_keyBlue_disabled.png');
+        game.load.image('spikes', 'img/spikes.png');
+        game.load.image('heartFull', 'img/hud_heartFull.png');
+        game.load.image('heartEmpty', 'img/hud_heartEmpty.png');
 
         game.load.spritesheet('alienSprite', 'img/alienSpritesheet.png', 90, 93);
-        game.load.spritesheet('spikes', 'img/spike-animation.png', 25, 21);
+        // game.load.spritesheet('spikes', 'img/spike-animation.png', 25, 21);
         game.load.spritesheet('astronaut', 'img/astronaut.png', 75, 85);
         
         game.load.audio('jumpNoise', 'sound/jump.wav');
@@ -125,9 +129,10 @@ var mainState = {
         //background
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.add.sprite(0, 0, 'background');
-
+        //platform  group
         platforms = game.add.group();
         platforms.enableBody = true;
+        
         //ground
         var ground = platforms.create(0, game.world.height - 40, 'ground');
         ground.scale.setTo(4, 2);
@@ -148,17 +153,19 @@ var mainState = {
         ledge.body.immovable = true;
 
         //spikes
+        spikesGroup = game.add.group();
+        spikesGroup.enableBody = true;
+        spikesGroup.allowGravity = false; 
 
-        // spikesGroup = game.add.group();
-        // spikesGroup.enableBody = true;
-        // spikesGroup.allowGravity = false; 
-        // spikesGroup.body.immovable = true; 
-        // spikes.animation.add('active', [0,1,2,3,4], 10, true);
-        // var spike = spikesGroup.create(600, 350, 'spikes');
+        var spike = spikesGroup.create(600, 317, 'spikes');
+        spike.body.immovable = true;
+        spike = spikesGroup.create(300, 727, 'spikes');
+        spike.body.immovable = true;
+        spike = spikesGroup.create(515, 442, 'spikes');
+        spike.body.immovable = true;
         
 
         //make invisible walls to stop aliens
-        //figure out a function to make this easier? 
         walls = game.add.group();
         walls.enableBody = true;
         walls.allowGravity = false; 
@@ -182,8 +189,6 @@ var mainState = {
         player.body.bounce.y = 0.2;
         player.body.gravity.y = 300;
         player.body.collideWorldBounds = true;
-
-        //astronaut movement
         player.animations.add('left', [1, 3, 5, 7, 9, 11, 13], 10, true);
         player.animations.add('right', [0, 2, 4, 6, 8, 10, 12], 10, true);
 
@@ -216,11 +221,12 @@ var mainState = {
         this.game.add.existing(alienThatMoves);
         aliensThatMoveGroup.add(alienThatMoves);
 
-        // starter score
+        // starter score/hearts/stars
         scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#ffffff' });
         starCountText = game.add.text(42, 50, 'x 0', { fontSize: '22px', fill: '#ffffff' });
         this.game.add.image(16, 50, 'star');
         this.game.add.image(16, 80, 'keyDisabled');
+
         //controls
         cursors = game.input.keyboard.createCursorKeys();  
     },
@@ -231,6 +237,8 @@ var mainState = {
         game.physics.arcade.collide(alienIdle, platforms);
         game.physics.arcade.collide(aliensThatMoveGroup, platforms);
         game.physics.arcade.collide(aliensThatMoveGroup, walls);
+        game.physics.arcade.collide(spikesGroup, platforms);
+        game.physics.arcade.collide(player, spikesGroup, this.spikeOverlap, null, this);
 
 
         game.physics.arcade.overlap(player, stars, this.collectStar, null, this);
@@ -261,6 +269,15 @@ var mainState = {
 
     },
 
+    spikeOverlap: function(player, spike){
+        if(spike.body.touching.up){
+        lives -=1;
+            if(lives == 0){
+                resetToStart();
+            }
+        }
+    },
+
     collectStar: function(player, star) {
         star.kill();
         game.sound.play('starNoise');
@@ -268,7 +285,7 @@ var mainState = {
         starPickupCount++; 
         scoreText.text = 'Score: ' + score;
         starCountText.text = 'x '+ starPickupCount; 
-        if(starPickupCount>=1){
+        if(starPickupCount>=6){
             //add key if all stars are collected
             var keys = game.add.group();
             keys.enableBody = true;
@@ -299,10 +316,11 @@ var mainState = {
             scoreText.text = 'Score: ' + score;  
         }else{ 
             //WHY IS IT SLOWING DOWN THE SOUND TOO??
-            game.sound.play('deathNoise');
-            resetToStart();            
+            game.sound.play('deathNoise');           
             lives -=1; 
-            // game.time.events.add(Phaser.Timer.SECOND * 2, resetToStart, this).autoDestroy = true;
+            if(lives ==0){
+                resetToStart(); 
+            }
         }
     },
     rocketLaunch: function(player, rocket){
@@ -318,6 +336,7 @@ function resetToStart(){
     score = 0;
     starPickupCount = 0;
     game.add.image(16, 80, 'keyDisabled');
+    lives = 3;
 
 }
 
