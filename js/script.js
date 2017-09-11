@@ -103,8 +103,32 @@ var starCountText;
 var hasKey = false; 
 
 
-//GAMEPLAY MAIN STATE 
+//GAMEPLAY START SCREEN
 
+var startScreen = {
+    preload: function(){
+        game.load.image('startBackground', 'img/bgStart.jpg');
+        game.load.image('start', 'img/start.png');
+
+    },
+    create: function(){
+        this.camera.flash('#000000');
+        game.add.sprite(0, 0, 'startBackground');
+        var start = game.add.sprite(200, 350, 'start');
+        var tween = game.add.tween(start);
+        tween.to({y:start.y + 6}, 800, Phaser.Easing.Sinusoidal.InOut);
+        tween.yoyo(true);
+        tween.loop();
+        tween.start();
+        start.inputEnabled = true;
+        start.input.useHandCursor = true;
+        start.events.onInputDown.add(listener, this);
+    },
+    update: function(){}
+}
+
+
+//GAMEPLAY MAIN STATE 
 var mainState = {
     preload: function() {
         game.load.image('background', 'img/bg1.jpg');
@@ -365,6 +389,12 @@ var mainState = {
     }
 }
 
+function listener(){
+   game.state.add('main', mainState);  
+game.state.start('main');
+}
+
+
 function loseLife(){
     lives -=1;
     livesText.text = 'Lives: '+lives;
@@ -398,8 +428,8 @@ function fadeComplete(){
 //BEGINS GAME
 
 var game = new Phaser.Game(800, 800);
-game.state.add('main', mainState);  
-game.state.start('main');
+game.state.add('start', startScreen);  
+game.state.start('start');
 
 
 
