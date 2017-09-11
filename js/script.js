@@ -182,13 +182,6 @@ var mainState = {
         player.animations.add('left', [1, 3, 5, 7, 9, 11, 13], 10, true);
         player.animations.add('right', [0, 2, 4, 6, 8, 10, 12], 10, true);
 
-        //key
-        var keys = game.add.group();
-        keys.enableBody = true;
-        keys.allowGravity = false;
-        key = keys.create(600, 720, 'key');
-        key.anchor.setTo(0.5, 1);
-
         // stars!
         stars = game.add.group();
         stars.enableBody = true;
@@ -233,7 +226,6 @@ var mainState = {
         game.physics.arcade.collide(alienIdle, platforms);
         game.physics.arcade.collide(aliensThatMoveGroup, platforms);
         game.physics.arcade.collide(aliensThatMoveGroup, walls);
-        // game.physics.arcade.collide(keys, platforms);
 
 
         game.physics.arcade.overlap(player, stars, this.collectStar, null, this);
@@ -271,14 +263,14 @@ var mainState = {
         starPickupCount++; 
         scoreText.text = 'Score: ' + score;
         starCountText.text = 'x '+ starPickupCount; 
-        // if(starPickupCount>=1){
-        //     //add key
-        //     var keys = game.add.group();
-        //     key = keys.create(600, 720, 'key');
-        //     key.anchor.setTo(0.5, 1);
-        //     // key.body.allowGravity = false;
-        //     game.physics.arcade.overlap(player, key, this.collectKey, null, this);
-        // }
+        if(starPickupCount>=6){
+            //add key if all stars are collected
+            var keys = game.add.group();
+            keys.enableBody = true;
+            game.physics.enable(keys);
+            key = keys.create(600, 720, 'key');
+            key.anchor.setTo(0.5, 1);
+        }
     },
 
     collectKey: function(player, key){
@@ -291,8 +283,6 @@ var mainState = {
         rocket.anchor.setTo(0.5, 1);
         game.physics.enable(rocket);
         rocket.body.allowGravity = false;
-        // game.physics.arcade.overlap(player, rocket, this.rocketLaunch, null, this);
-
     },
 
     killAlienIdle: function(player, alienIdleRight){
@@ -321,6 +311,7 @@ function resetToStart(){
     hasKey = false;
     score = 0;
     starPickupCount = 0;
+    game.add.image(16, 80, 'keyDisabled');
 
 }
 
