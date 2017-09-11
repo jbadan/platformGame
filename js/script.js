@@ -122,7 +122,7 @@ var startScreen = {
         tween.start();
         start.inputEnabled = true;
         start.input.useHandCursor = true;
-        start.events.onInputDown.add(listener, this);
+        start.events.onInputDown.add(listenerStart, this);
     },
     update: function(){}
 }
@@ -389,9 +389,36 @@ var mainState = {
     }
 }
 
-function listener(){
+
+//GAMEPLAY END SCREEN 
+
+var endScreen = {
+    preload: function(){
+        game.load.image('endBackground', 'img/bgEnd.jpg');
+        game.load.image('retry', 'img/retry_logo.png');
+
+    },
+    create: function(){
+        this.camera.flash('#000000');
+        game.add.sprite(0, 0, 'endBackground');
+        var retry = game.add.sprite(200, 350, 'retry');
+        var tween = game.add.tween(retry);
+        tween.to({y:retry.y + 6}, 800, Phaser.Easing.Sinusoidal.InOut);
+        tween.yoyo(true);
+        tween.loop();
+        tween.start();
+        retry.inputEnabled = true;
+        retry.input.useHandCursor = true;
+        retry.events.onInputDown.add(listenerStart, this);
+    },
+    update: function(){}
+}
+
+
+
+function listenerStart(){
    game.state.add('main', mainState);  
-game.state.start('main');
+    game.state.start('main');
 }
 
 
@@ -422,7 +449,8 @@ function resetToStart(){
 }
 
 function fadeComplete(){
-    game.state.start('main');
+    game.state.add('end', endScreen);  
+    game.state.start('end');
 }
 
 //BEGINS GAME
