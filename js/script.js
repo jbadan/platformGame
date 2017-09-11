@@ -21,6 +21,10 @@ astronaut:
     add jumping/stopped/falling spritesheet
     -https://mozdevs.github.io/html5-games-workshop/en/guides/platformer/animations-for-the-main-character/
 
+sound:
+    collect key
+    rocket take off
+
 EXTRAS:
 -choose different player icon
 -powerup?- move faster 10 seconds, jump higher 10 seconds
@@ -117,6 +121,7 @@ var mainState = {
         game.load.audio('deathNoise', 'sound/sadTrombone.wav');
     },
     create: function() {
+        this.camera.flash('#000000');
         //background
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.add.sprite(0, 0, 'background');
@@ -263,7 +268,7 @@ var mainState = {
         starPickupCount++; 
         scoreText.text = 'Score: ' + score;
         starCountText.text = 'x '+ starPickupCount; 
-        if(starPickupCount>=6){
+        if(starPickupCount>=1){
             //add key if all stars are collected
             var keys = game.add.group();
             keys.enableBody = true;
@@ -307,12 +312,17 @@ var mainState = {
 }
 
 function resetToStart(){
-    game.state.start('main');
+    game.camera.fade('#000000');
+    game.camera.onFadeComplete.add(this.fadeComplete,this);
     hasKey = false;
     score = 0;
     starPickupCount = 0;
     game.add.image(16, 80, 'keyDisabled');
 
+}
+
+function fadeComplete(){
+    game.state.start('main');
 }
 
 //BEGINS GAME
