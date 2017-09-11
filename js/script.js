@@ -4,10 +4,8 @@ platforms
     -find better image
     -make variable lengths 
     -spacing on 2nd platform makes it really hard to win
-obstacles
-    -spikes/toxic sludge on ground
-lives logic
-    -3 lives- display next to score
+lives
+    -change counter to images
 high score
     -display above current score
     -store in local storage
@@ -24,6 +22,8 @@ astronaut:
 sound:
     collect key
     rocket take off
+    background music?
+    add music/sound mute toggle
 
 EXTRAS:
 -choose different player icon
@@ -86,12 +86,18 @@ var player;
 var platforms;
 var cursors;
 var spikesGroup; 
+var lasers; 
+var laserBeam; 
 
 var stars;
+
 var key; 
 var rocket;
+var button; 
+
 var score = 0;
 var starPickupCount = 0;
+var livesText; 
 var lives = 3; 
 var scoreText;
 var starCountText;
@@ -114,9 +120,12 @@ var mainState = {
         game.load.image('spikes', 'img/spikes.png');
         game.load.image('heartFull', 'img/hud_heartFull.png');
         game.load.image('heartEmpty', 'img/hud_heartEmpty.png');
+        game.load.image('buttonPressed', 'img/buttonGreen_pressed_50.png');
+        game.load.image('button', 'img/buttonGreen_50.png');
+        game.load.image('laser', 'img/laserRight_50.png');
+        game.load.image('laserBeam', 'img/laserRedHorizontal.png');
 
         game.load.spritesheet('alienSprite', 'img/alienSpritesheet.png', 90, 93);
-        // game.load.spritesheet('spikes', 'img/spike-animation.png', 25, 21);
         game.load.spritesheet('astronaut', 'img/astronaut.png', 75, 85);
         
         game.load.audio('jumpNoise', 'sound/jump.wav');
@@ -161,9 +170,27 @@ var mainState = {
         spike.body.immovable = true;
         spike = spikesGroup.create(300, 727, 'spikes');
         spike.body.immovable = true;
-        spike = spikesGroup.create(515, 442, 'spikes');
+        spike = spikesGroup.create(330, 727, 'spikes');
         spike.body.immovable = true;
         
+        //button to turn off laser 
+        var buttons = game.add.group();
+        buttons.enableBody = true;
+        game.physics.enable(buttons);
+        button = buttons.create(700, 314, 'button');
+
+        //laser box
+        lasers = game.add.group();
+        lasers.enableBody = true;
+        lasers.allowGravity = false;
+        game.physics.enable(lasers);
+        laser = lasers.create(390, 565, 'laser');
+        laser.body.immovable = true;
+
+        //laser beam
+        laserBeam = lasers.create(426, 548, 'laserBeam');
+        laserBeam.body.immovable = true;
+        laserBeam.scale.setTo(6 ,1);
 
         //make invisible walls to stop aliens
         walls = game.add.group();
@@ -184,7 +211,7 @@ var mainState = {
         wall.body.immovable = true;
 
         // make astronaut
-        player = game.add.sprite(75, 85, 'astronaut');
+        player = game.add.sprite(25, 650, 'astronaut');
         game.physics.arcade.enable(player);
         player.body.bounce.y = 0.2;
         player.body.gravity.y = 300;
@@ -201,12 +228,6 @@ var mainState = {
         star = stars.create(200, 250, 'star');
         star = stars.create(20, 125, 'star');
         star = stars.create(650, 125, 'star');
-
-
-        //Idle aliens 
-        alienIdle = game.add.group();
-        alienIdle.enableBody = true;
-        alienIdleRight = alienIdle.create(350, 500, 'alienIdleRight');
 
         //moving aliens (extended sprite);
         aliensThatMoveGroup = game.add.group();
@@ -227,6 +248,8 @@ var mainState = {
         this.game.add.image(16, 50, 'star');
         this.game.add.image(16, 80, 'keyDisabled');
 
+        livesText = game.add.text(670, 16, 'Lives: 3', { fontSize: '32px', fill: '#ffffff' });
+
         //controls
         cursors = game.input.keyboard.createCursorKeys();  
     },
@@ -234,16 +257,16 @@ var mainState = {
     update: function() {
         game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(stars, platforms);
-        game.physics.arcade.collide(alienIdle, platforms);
         game.physics.arcade.collide(aliensThatMoveGroup, platforms);
         game.physics.arcade.collide(aliensThatMoveGroup, walls);
         game.physics.arcade.collide(spikesGroup, platforms);
+        game.physics.arcade.collide(player, lasers, this.laserDeath, null, this);
         game.physics.arcade.collide(player, spikesGroup, this.spikeOverlap, null, this);
+        game.physics.arcade.collide(player, button, this.toggleButton, null, this);
 
 
         game.physics.arcade.overlap(player, stars, this.collectStar, null, this);
-        game.physics.arcade.overlap(player, alienIdle, this.killAlienIdle, null, this);
-        game.physics.arcade.overlap(player, aliensThatMoveGroup, this.killAlienIdle, null, this);
+        game.physics.arcade.overlap(player, aliensThatMoveGroup, this.killAlien, null, this);
         game.physics.arcade.overlap(player, key, this.collectKey, null, this);
         game.physics.arcade.overlap(player, rocket, this.rocketLaunch, function(player, rocket){
             return this.hasKey && player.body.touching.down;
@@ -269,12 +292,23 @@ var mainState = {
 
     },
 
+    toggleButton: function(player, button){
+      if(button.body.touching.up){
+        button.kill();
+        laserBeam.kill();
+        this.game.add.image(700, 314, 'buttonPressed');
+      }  
+    },
+
     spikeOverlap: function(player, spike){
         if(spike.body.touching.up){
-        lives -=1;
-            if(lives == 0){
-                resetToStart();
-            }
+        loseLife();
+        }
+    },
+
+    laserDeath: function(player, laserBeam){
+        if(laserBeam.body.touching.up){
+        loseLife();
         }
     },
 
@@ -307,26 +341,38 @@ var mainState = {
         rocket.body.allowGravity = false;
     },
 
-    killAlienIdle: function(player, alienIdleRight){
-        if(alienIdleRight.body.touching.up ){      
+    killAlien: function(player, alien){
+        if(alien.body.touching.up ){      
             player.body.velocity.y = -200;  
-            alienIdleRight.kill();         
+            alien.kill();         
             game.sound.play('killNoise');
             score +=15;
             scoreText.text = 'Score: ' + score;  
         }else{ 
             //WHY IS IT SLOWING DOWN THE SOUND TOO??
             game.sound.play('deathNoise');           
-            lives -=1; 
-            if(lives ==0){
-                resetToStart(); 
-            }
+            loseLife();
         }
     },
     rocketLaunch: function(player, rocket){
         rocket.body.velocity.y = -500;
         player.kill();
     }
+}
+
+function loseLife(){
+    lives -=1;
+    livesText.text = 'Lives: '+lives;
+     if(lives == 0){
+        resetToStart();
+    }else{
+        resetPlayer();
+    }
+}
+
+function resetPlayer(){
+    player.kill();
+    player.reset(25, 650);
 }
 
 function resetToStart(){
