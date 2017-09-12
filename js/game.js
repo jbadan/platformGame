@@ -66,22 +66,25 @@ var scoreText;
 var starCountText;
 var hasKey = false; 
 
-
-
-
-
 //GAMEPLAY MAIN STATE 
 var level1 = {
     preload: function() {
         game.load.image('background', 'img/bg1.jpg');
+        game.load.image('mountains', 'img/mountains.png');
+        game.load.image('planet', 'img/planet.png');
         game.load.image('baseGround', 'img/ground.png');
-        game.load.image('ground', 'img/platform2.png');
+        game.load.image('fence', 'img/metalFence.png');
+        game.load.image('fenceRight', 'img/metalFenceRight.png');
+        game.load.image('leftBeam', 'img/beamDiagonalLeft.png');
+        game.load.image('rightBeam', 'img/beamDiagonalRight.png');
+        game.load.image('narrowBeam', 'img/beamNarrow.png');
+        game.load.image('ground', 'img/platform3.png');
         game.load.image('invisibleWall', 'img/invisible_wall.png');
         game.load.image('star', 'img/star.png');
         game.load.image('alienIdleRight', 'img/alienIdleRight.png');
         game.load.image('rocket', 'img/playerShip1_orange.png');
-        game.load.image('key', 'img/hud_keyBlue.png');
-        game.load.image('keyDisabled', 'img/hud_keyBlue_disabled.png');
+        game.load.image('key', 'img/hud_keyRed.png');
+        game.load.image('keyDisabled', 'img/hud_keyRed_disabled.png');
         game.load.image('spikes', 'img/spikes.png');
         game.load.image('heartFull', 'img/hud_heartFull.png');
         game.load.image('heartEmpty', 'img/hud_heartEmpty.png');
@@ -103,6 +106,16 @@ var level1 = {
         //background
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.add.sprite(0, 0, 'background');
+        game.add.sprite(-200, 500, 'mountains');
+        game.add.sprite(470, 50, 'planet');
+        game.add.sprite(0, 690, 'fence');
+        game.add.sprite(60, 690, 'fenceRight');
+        game.add.sprite(730, 370, 'leftBeam');
+        game.add.sprite(-10, 172, 'rightBeam');
+        game.add.sprite(203, 270, 'narrowBeam');
+        game.add.sprite(273, 270, 'narrowBeam');
+        game.add.sprite(343, 270, 'narrowBeam');
+
         //platform  group
         platforms = game.add.group();
         platforms.enableBody = true;
@@ -133,9 +146,13 @@ var level1 = {
 
         var spike = spikesGroup.create(600, 317, 'spikes');
         spike.body.immovable = true;
+        spike = spikesGroup.create(270, 727, 'spikes');
+        spike.body.immovable = true;
         spike = spikesGroup.create(300, 727, 'spikes');
         spike.body.immovable = true;
         spike = spikesGroup.create(330, 727, 'spikes');
+        spike.body.immovable = true;
+        spike = spikesGroup.create(360, 727, 'spikes');
         spike.body.immovable = true;
         
         //button to turn off laser 
@@ -198,6 +215,11 @@ var level1 = {
         star = stars.create(200, 250, 'star');
         star = stars.create(20, 125, 'star');
         star = stars.create(650, 125, 'star');
+        var tweenStar = game.add.tween(stars);
+        tweenStar.to({y:stars.y + 3}, 600, Phaser.Easing.Sinusoidal.InOut);
+        tweenStar.yoyo(true);
+        tweenStar.loop();
+        tweenStar.start();
 
         //moving aliens (extended sprite);
         aliensThatMoveGroup = game.add.group();
@@ -219,7 +241,6 @@ var level1 = {
         this.game.add.image(16, 80, 'keyDisabled');
 
         livesText = game.add.text(670, 16, 'Lives: 3', { fontSize: '32px', fill: '#ffffff' });
-
         //controls
         cursors = game.input.keyboard.createCursorKeys();  
     },
