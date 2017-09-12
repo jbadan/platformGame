@@ -1,7 +1,7 @@
 //GAMEPLAY START SCREEN
 
 WebFontConfig = {
-    // active: function() { game.time.events.add(Phaser.Timer.SECOND, createText, this); },
+    active: function() { game.time.events.add(Phaser.Timer.SECOND, createText, this); },
     google: {
       families: ['Press Start 2P']
     }

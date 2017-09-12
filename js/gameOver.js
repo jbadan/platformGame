@@ -27,7 +27,6 @@ var end = {
         tween.start();
         retry.inputEnabled = true;
         retry.input.useHandCursor = true;
-        retry.events.onInputDown.add(listenerStart);
     },
     update: function(){},
     RestartGame: function(){

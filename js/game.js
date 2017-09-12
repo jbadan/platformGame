@@ -51,6 +51,9 @@ var cursors;
 var spikesGroup; 
 var lasers; 
 var laserBeam; 
+var weapon;
+var fireButton;
+var bullet;
 
 var stars;
 
@@ -92,6 +95,7 @@ var level1 = {
         game.load.image('button', 'img/buttonRed_50.png');
         game.load.image('laser', 'img/laserRight_50.png');
         game.load.image('laserBeam', 'img/laserRedHorizontal.png');
+        game.load.image('bullet', 'img/laserPurple.png');
 
         game.load.spritesheet('alienSprite', 'img/alienSpritesheet.png', 90, 93);
         game.load.spritesheet('astronaut', 'img/astronaut.png', 75, 85);
@@ -159,7 +163,7 @@ var level1 = {
         var buttons = game.add.group();
         buttons.enableBody = true;
         game.physics.enable(buttons);
-        button = buttons.create(700, 314, 'button');
+        button = buttons.create(700, 320, 'button');
 
         //laser box
         lasers = game.add.group();
@@ -197,14 +201,27 @@ var level1 = {
         wall = walls.create(430, 230, 'invisibleWall');
         wall.body.immovable = true;
 
+        //astronaut weapon
+        weapon = game.add.weapon(30, 'bullet');
+        weapon.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
+        weapon.bulletLifespan = 2000;
+        weapon.bulletSpeed = 600;
+        weapon.fireRate = 1000;
+
         // make astronaut
         player = game.add.sprite(25, 650, 'astronaut');
         game.physics.arcade.enable(player);
+        player.anchor.set(0.5);
         player.body.bounce.y = 0.2;
         player.body.gravity.y = 300;
         player.body.collideWorldBounds = true;
         player.animations.add('left', [1, 3, 5, 7, 9, 11, 13], 10, true);
         player.animations.add('right', [0, 2, 4, 6, 8, 10, 12], 10, true);
+
+        weapon.trackSprite(player, 0, 0, false);
+        cursors = this.input.keyboard.createCursorKeys();
+        fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+
 
         // stars!
         stars = game.add.group();
@@ -255,10 +272,10 @@ var level1 = {
         game.physics.arcade.collide(player, spikesGroup, this.spikeOverlap, null, this);
         game.physics.arcade.collide(player, button, this.toggleButton, null, this);
 
-
         game.physics.arcade.overlap(player, stars, this.collectStar, null, this);
         game.physics.arcade.overlap(player, aliensThatMoveGroup, this.killAlien, null, this);
         game.physics.arcade.overlap(player, key, this.collectKey, null, this);
+        game.physics.arcade.overlap(weapon.bullets, aliensThatMoveGroup, this.killAlienBullet, null, this);
         game.physics.arcade.overlap(player, rocket, this.rocketLaunch, function(player, rocket){
             return this.hasKey && player.body.touching.down;
         }, this);
@@ -280,7 +297,18 @@ var level1 = {
             player.body.velocity.y = -350;
             game.sound.play('jumpNoise');
         }
-
+        if (fireButton.isDown){
+            if (cursors.left.isDown) {
+                weapon.fireAngle = Phaser.ANGLE_LEFT;
+                weapon.fire();
+            } else if (cursors.right.isDown) {
+                weapon.fireAngle = Phaser.ANGLE_RIGHT;
+                weapon.fire();
+            }else{
+                weapon.fireAngle = Phaser.ANGLE_RIGHT;
+                weapon.fire();
+            }
+        }
     },
 
     toggleButton: function(player, button){
@@ -288,7 +316,7 @@ var level1 = {
         button.kill();
         laser.kill();
         laserBeam.kill();
-        this.game.add.image(700, 314, 'buttonPressed');
+        this.game.add.image(700, 320, 'buttonPressed');
       }  
     },
 
@@ -334,7 +362,7 @@ var level1 = {
     },
 
     killAlien: function(player, alien){
-        if(alien.body.touching.up ){      
+        if(alien.body.touching.up){      
             player.body.velocity.y = -200;  
             alien.kill();         
             game.sound.play('killNoise');
@@ -346,9 +374,17 @@ var level1 = {
             loseLife();
         }
     },
+    killAlienBullet: function(bullet, alien){
+        alien.kill(); 
+        bullet.kill();     
+        game.sound.play('killNoise');
+        score +=15;
+        scoreText.text = 'Score: ' + score;  
+    },
     rocketLaunch: function(player, rocket){
         rocket.body.velocity.y = -500;
         player.kill();
+        game.time.events.add(Phaser.Timer.SECOND * 4, goToWinScreen, this);
     }
 }
 
@@ -383,3 +419,6 @@ function fadeComplete(){
     game.state.start('end');
 }
 
+function goToWinScreen(){
+    game.state.start('win');
+}
