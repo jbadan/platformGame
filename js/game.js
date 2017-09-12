@@ -98,7 +98,7 @@ var level1 = {
         game.load.image('bullet', 'img/laserPurple.png');
 
         game.load.spritesheet('alienSprite', 'img/alienSpritesheet.png', 90, 93);
-        game.load.spritesheet('astronaut', 'img/astronaut.png', 75, 85);
+        game.load.spritesheet('astronaut', 'img/astroSpritesheet.png', 83, 86);
         
         game.load.audio('jumpNoise', 'sound/jump.wav');
         game.load.audio('killNoise', 'sound/hit.wav');
@@ -215,8 +215,12 @@ var level1 = {
         player.body.bounce.y = 0.2;
         player.body.gravity.y = 300;
         player.body.collideWorldBounds = true;
-        player.animations.add('left', [1, 3, 5, 7, 9, 11, 13], 10, true);
-        player.animations.add('right', [0, 2, 4, 6, 8, 10, 12], 10, true);
+        player.animations.add('left', [1, 7, 13, 19, 25, 31, 37], 10, true);
+        player.animations.add('right', [0, 6, 12, 18, 24, 30, 36], 10, true);
+        player.animations.add('shootRight', [2, 8, 14, 20, 26, 32, 38], 5, true);
+        player.animations.add('shootLeft', [3, 9, 15, 21, 27, 33, 39], 5, true);
+        player.animations.add('dieRight', [4, 10, 16, 22, 28, 34, 40], 10, true);
+        player.animations.add('dieLeft', [5, 11, 17, 23, 29, 35, 41], 10, true);
 
         weapon.trackSprite(player, 0, 0, false);
         cursors = this.input.keyboard.createCursorKeys();
@@ -291,7 +295,7 @@ var level1 = {
             player.animations.play('right');
         }else{
             player.animations.stop();
-            player.frame = 4;
+            player.frame = 0;
         }
         if (cursors.up.isDown && player.body.touching.down){
             player.body.velocity.y = -350;
@@ -300,12 +304,15 @@ var level1 = {
         if (fireButton.isDown){
             if (cursors.left.isDown) {
                 weapon.fireAngle = Phaser.ANGLE_LEFT;
+                player.animations.play('shootLeft');
                 weapon.fire();
             } else if (cursors.right.isDown) {
                 weapon.fireAngle = Phaser.ANGLE_RIGHT;
+                player.animations.play('shootRight');
                 weapon.fire();
             }else{
                 weapon.fireAngle = Phaser.ANGLE_RIGHT;
+                player.animations.play('shootRight');
                 weapon.fire();
             }
         }
