@@ -1,40 +1,3 @@
-/*TO DO LEVEL 1:
-put creating info in JSON file
-platforms
-    -find better image
-    -make variable lengths 
-    -spacing on 2nd platform makes it really hard to win
-lives
-    -change counter to images
-high score
-    -display above current score
-    -store in local storage
-enemies:
-    shoot
-    different types
-astronaut:
-    add gun  
-        -update spritesheet to include shooting
-        -shooting logic
-    add jumping/stopped/falling spritesheet
-    -https://mozdevs.github.io/html5-games-workshop/en/guides/platformer/animations-for-the-main-character/
-
-sound:
-    collect key
-    rocket take off
-    background music?
-    add music/sound mute toggle
-
-EXTRAS:
--choose different player icon
--powerup?- move faster 10 seconds, jump higher 10 seconds
-
-CURRENT BUGS:
--death animation
--time delay for restart after death sound
-
-*/
-
 //EXTERNAL SPRITES
 
 //alien sprites 
@@ -80,6 +43,7 @@ AlienMoving.prototype.die = function () {
 };
 
 
+///GLOBAL VARIABLES
 
 var player;
 var platforms;
@@ -103,33 +67,11 @@ var starCountText;
 var hasKey = false; 
 
 
-//GAMEPLAY START SCREEN
 
-var startScreen = {
-    preload: function(){
-        game.load.image('startBackground', 'img/bgStart.jpg');
-        game.load.image('start', 'img/start.png');
-
-    },
-    create: function(){
-        this.camera.flash('#000000');
-        game.add.sprite(0, 0, 'startBackground');
-        var start = game.add.sprite(200, 350, 'start');
-        var tween = game.add.tween(start);
-        tween.to({y:start.y + 6}, 800, Phaser.Easing.Sinusoidal.InOut);
-        tween.yoyo(true);
-        tween.loop();
-        tween.start();
-        start.inputEnabled = true;
-        start.input.useHandCursor = true;
-        start.events.onInputDown.add(listenerStart, this);
-    },
-    update: function(){}
-}
 
 
 //GAMEPLAY MAIN STATE 
-var mainState = {
+var level1 = {
     preload: function() {
         game.load.image('background', 'img/bg1.jpg');
         game.load.image('baseGround', 'img/ground.png');
@@ -390,38 +332,6 @@ var mainState = {
 }
 
 
-//GAMEPLAY END SCREEN 
-
-var endScreen = {
-    preload: function(){
-        game.load.image('endBackground', 'img/bgEnd.jpg');
-        game.load.image('retry', 'img/retry_logo.png');
-
-    },
-    create: function(){
-        this.camera.flash('#000000');
-        game.add.sprite(0, 0, 'endBackground');
-        var retry = game.add.sprite(200, 350, 'retry');
-        var tween = game.add.tween(retry);
-        tween.to({y:retry.y + 6}, 800, Phaser.Easing.Sinusoidal.InOut);
-        tween.yoyo(true);
-        tween.loop();
-        tween.start();
-        retry.inputEnabled = true;
-        retry.input.useHandCursor = true;
-        retry.events.onInputDown.add(listenerStart, this);
-    },
-    update: function(){}
-}
-
-
-
-function listenerStart(){
-   game.state.add('main', mainState);  
-    game.state.start('main');
-}
-
-
 function loseLife(){
     lives -=1;
     livesText.text = 'Lives: '+lives;
@@ -448,22 +358,7 @@ function resetToStart(){
 
 }
 
-function fadeComplete(){
-    game.state.add('end', endScreen);  
+function fadeComplete(){ 
     game.state.start('end');
 }
 
-//BEGINS GAME
-
-var game = new Phaser.Game(800, 800);
-game.state.add('start', startScreen);  
-game.state.start('start');
-
-
-
-/*Resources: 
-http://blog.kumansenu.com/2016/04/patrolling-enemy-ai-with-phaser/
-https://hacks.mozilla.org/2017/04/html5-games-workshop-make-a-platformer-game-with-javascript/
-http://kenney.nl/
-
-*/
