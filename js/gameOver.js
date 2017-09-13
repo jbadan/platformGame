@@ -30,6 +30,11 @@ var end = {
     },
     update: function(){},
     RestartGame: function(){
+        hasKey = false;
+        score = 0;
+        starPickupCount = 0;
+        game.add.image(16, 80, 'keyDisabled');
+        lives = 3;
         this.state.start('level1');
     }
 }

@@ -67,7 +67,13 @@ var livesText;
 var lives = 3; 
 var scoreText;
 var starCountText;
+var highScoreText;
 var hasKey = false; 
+localStorage.highScore;
+if(localStorage.highScore === undefined){
+  localStorage.highScore = 0;
+}
+
 
 //GAMEPLAY MAIN STATE 
 var level1 = {
@@ -98,6 +104,7 @@ var level1 = {
         game.load.image('bullet', 'img/laserPurple.png');
 
         game.load.spritesheet('alienSprite', 'img/alienSpritesheet.png', 90, 93);
+        game.load.spritesheet('robotSprite', 'img/spritesheet_80.png', 168, 161);
         game.load.spritesheet('astronaut', 'img/astroSpritesheet.png', 83, 86);
         
         game.load.audio('jumpNoise', 'sound/jump.wav');
@@ -256,12 +263,14 @@ var level1 = {
         aliensThatMoveGroup.add(alienThatMoves);
 
         // starter score/hearts/stars
-        scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#ffffff' });
-        starCountText = game.add.text(42, 50, 'x 0', { fontSize: '22px', fill: '#ffffff' });
-        this.game.add.image(16, 50, 'star');
-        this.game.add.image(16, 80, 'keyDisabled');
+        scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '22px', fill: '#ffffff' });
+        starCountText = game.add.text(42, 45, 'x 0', { fontSize: '22px', fill: '#ffffff' });
+        this.game.add.image(16, 45, 'star');
+        this.game.add.image(16, 75, 'keyDisabled');
 
-        livesText = game.add.text(670, 16, 'Lives: 3', { fontSize: '32px', fill: '#ffffff' });
+        livesText = game.add.text(660, 40, 'Lives: 3', { fontSize: '20px', fill: '#ffffff' });
+
+        highScoreText = game.add.text(660, 16, 'High score: '+localStorage.highScore, { fontSize: '20px', fill: '#ffffff' });
         //controls
         cursors = game.input.keyboard.createCursorKeys();  
     },
@@ -341,10 +350,9 @@ var level1 = {
 
     collectStar: function(player, star) {
         star.kill();
+        increaseScore();
         game.sound.play('starNoise');
-        score += 10;
         starPickupCount++; 
-        scoreText.text = 'Score: ' + score;
         starCountText.text = 'x '+ starPickupCount; 
         if(starPickupCount>=6){
             //add key if all stars are collected
@@ -373,8 +381,7 @@ var level1 = {
             player.body.velocity.y = -200;  
             alien.kill();         
             game.sound.play('killNoise');
-            score +=15;
-            scoreText.text = 'Score: ' + score;  
+            increaseScore();
         }else{ 
             //WHY IS IT SLOWING DOWN THE SOUND TOO??
             game.sound.play('deathNoise');           
@@ -385,13 +392,12 @@ var level1 = {
         alien.kill(); 
         bullet.kill();     
         game.sound.play('killNoise');
-        score +=15;
-        scoreText.text = 'Score: ' + score;  
+        increaseScore(); 
     },
     rocketLaunch: function(player, rocket){
         rocket.body.velocity.y = -500;
         player.kill();
-        game.time.events.add(Phaser.Timer.SECOND * 4, goToWinScreen, this);
+        game.time.events.add(Phaser.Timer.SECOND * 3, goToWinScreen, this);
     }
 }
 
@@ -403,6 +409,15 @@ function loseLife(){
         resetToStart();
     }else{
         resetPlayer();
+    }
+}
+
+function increaseScore(){
+    score += 10;
+    scoreText.text = 'Score: ' + score;
+    if(score > localStorage.highScore){
+        localStorage.highScore = score;
+        highScoreText = "High score: "+ localStorage.highScore;
     }
 }
 

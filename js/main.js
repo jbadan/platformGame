@@ -6,28 +6,17 @@ high score
     -display above current score
     -store in local storage
 enemies:
-    shoot
-    different types
-astronaut:
-    add gun  
-        -update spritesheet to include shooting
-        -shooting logic
-    add jumping/stopped/falling spritesheet
-    -https://mozdevs.github.io/html5-games-workshop/en/guides/platformer/animations-for-the-main-character/
-
+    different types (robot)
 sound:
     collect key
     rocket take off
     background music?
     add music/sound mute toggle
 
-EXTRAS:
--choose different player icon
--powerup?- move faster 10 seconds, jump higher 10 seconds
-
 CURRENT BUGS:
 -death animation
 -time delay for restart after death sound
+-spikes take multiple lives
 
 */
 
