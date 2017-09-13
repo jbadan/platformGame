@@ -78,39 +78,39 @@ if(localStorage.highScore === undefined){
 //GAMEPLAY MAIN STATE 
 var level1 = {
     preload: function() {
-        game.load.image('background', 'img/bg1.jpg');
-        game.load.image('mountains', 'img/mountains.png');
-        game.load.image('planet', 'img/planet.png');
-        game.load.image('baseGround', 'img/ground.png');
-        game.load.image('fence', 'img/metalFence.png');
-        game.load.image('fenceRight', 'img/metalFenceRight.png');
-        game.load.image('leftBeam', 'img/beamDiagonalLeft.png');
-        game.load.image('rightBeam', 'img/beamDiagonalRight.png');
-        game.load.image('narrowBeam', 'img/beamNarrow.png');
-        game.load.image('ground', 'img/platform3.png');
-        game.load.image('invisibleWall', 'img/invisible_wall.png');
-        game.load.image('star', 'img/star.png');
-        game.load.image('alienIdleRight', 'img/alienIdleRight.png');
-        game.load.image('rocket', 'img/playerShip1_orange.png');
-        game.load.image('key', 'img/hud_keyRed.png');
-        game.load.image('keyDisabled', 'img/hud_keyRed_disabled.png');
-        game.load.image('spikes', 'img/spikes.png');
-        game.load.image('heartFull', 'img/hud_heartFull.png');
-        game.load.image('heartEmpty', 'img/hud_heartEmpty.png');
-        game.load.image('buttonPressed', 'img/buttonRed_pressed_50.png');
-        game.load.image('button', 'img/buttonRed_50.png');
-        game.load.image('laser', 'img/laserRight_50.png');
-        game.load.image('laserBeam', 'img/laserRedHorizontal.png');
-        game.load.image('bullet', 'img/laserPurple.png');
+        game.load.image('background', 'assets/bg1.jpg');
+        game.load.image('mountains', 'assets/mountains.png');
+        game.load.image('planet', 'assets/planet.png');
+        game.load.image('baseGround', 'assets/ground.png');
+        game.load.image('fence', 'assets/metalFence.png');
+        game.load.image('fenceRight', 'assets/metalFenceRight.png');
+        game.load.image('leftBeam', 'assets/beamDiagonalLeft.png');
+        game.load.image('rightBeam', 'assets/beamDiagonalRight.png');
+        game.load.image('narrowBeam', 'assets/beamNarrow.png');
+        game.load.image('ground', 'assets/platform3.png');
+        game.load.image('invisibleWall', 'assets/invisible_wall.png');
+        game.load.image('star', 'assets/star.png');
+        game.load.image('alienIdleRight', 'assets/alienIdleRight.png');
+        game.load.image('rocket', 'assets/playerShip1_orange.png');
+        game.load.image('key', 'assets/hud_keyRed.png');
+        game.load.image('keyDisabled', 'assets/hud_keyRed_disabled.png');
+        game.load.image('spikes', 'assets/spikes.png');
+        game.load.image('heartFull', 'assets/hud_heartFull.png');
+        game.load.image('heartEmpty', 'assets/hud_heartEmpty.png');
+        game.load.image('buttonPressed', 'assets/buttonRed_pressed_50.png');
+        game.load.image('button', 'assets/buttonRed_50.png');
+        game.load.image('laser', 'assets/laserRight_50.png');
+        game.load.image('laserBeam', 'assets/laserRedHorizontal.png');
+        game.load.image('bullet', 'assets/laserPurple.png');
 
-        game.load.spritesheet('alienSprite', 'img/alienSpritesheet.png', 90, 93);
-        game.load.spritesheet('robotSprite', 'img/spritesheet_80.png', 168, 161);
-        game.load.spritesheet('astronaut', 'img/astroSpritesheet.png', 83, 86);
+        game.load.spritesheet('alienSprite', 'assets/alienSpritesheet.png', 90, 93);
+        game.load.spritesheet('robotSprite', 'assets/spritesheet_80.png', 168, 161);
+        game.load.spritesheet('astronaut', 'assets/astroSpritesheet.png', 83, 86);
         
-        game.load.audio('jumpNoise', 'sound/jump.wav');
-        game.load.audio('killNoise', 'sound/hit.wav');
-        game.load.audio('starNoise', 'sound/star.wav');
-        game.load.audio('deathNoise', 'sound/sadTrombone.wav');
+        game.load.audio('jumpNoise', 'assets/sound/jump.wav');
+        game.load.audio('killNoise', 'assets/sound/hit.wav');
+        game.load.audio('starNoise', 'assets/sound/star.wav');
+        game.load.audio('deathNoise', 'assets/sound/sadTrombone.wav');
     },
     create: function() {
         this.camera.flash('#000000');
@@ -226,13 +226,10 @@ var level1 = {
         player.animations.add('right', [0, 6, 12, 18, 24, 30, 36], 10, true);
         player.animations.add('shootRight', [2, 8, 14, 20, 26, 32, 38], 5, true);
         player.animations.add('shootLeft', [3, 9, 15, 21, 27, 33, 39], 5, true);
-        player.animations.add('dieRight', [4, 10, 16, 22, 28, 34, 40], 10, true);
-        player.animations.add('dieLeft', [5, 11, 17, 23, 29, 35, 41], 10, true);
 
         weapon.trackSprite(player, 0, 0, false);
         cursors = this.input.keyboard.createCursorKeys();
         fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-
 
         // stars!
         stars = game.add.group();
@@ -263,16 +260,13 @@ var level1 = {
         aliensThatMoveGroup.add(alienThatMoves);
 
         // starter score/hearts/stars
-        scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '22px', fill: '#ffffff' });
-        starCountText = game.add.text(42, 45, 'x 0', { fontSize: '22px', fill: '#ffffff' });
         this.game.add.image(16, 45, 'star');
         this.game.add.image(16, 75, 'keyDisabled');
 
+        scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '22px', fill: '#ffffff' });
+        starCountText = game.add.text(42, 45, 'x 0', { fontSize: '22px', fill: '#ffffff' });
         livesText = game.add.text(660, 40, 'Lives: 3', { fontSize: '20px', fill: '#ffffff' });
-
         highScoreText = game.add.text(660, 16, 'High score: '+localStorage.highScore, { fontSize: '20px', fill: '#ffffff' });
-        //controls
-        cursors = game.input.keyboard.createCursorKeys();  
     },
 
     update: function() {
@@ -383,7 +377,6 @@ var level1 = {
             game.sound.play('killNoise');
             increaseScore();
         }else{ 
-            //WHY IS IT SLOWING DOWN THE SOUND TOO??
             game.sound.play('deathNoise');           
             loseLife();
         }

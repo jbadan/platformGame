@@ -6,8 +6,8 @@ var playAgain;
 
 var win = {
     preload: function(){
-        game.load.image('winBackground', 'img/winbg.jpg');
-        game.load.image('rocket', 'img/playerShip1_orange.png');
+        game.load.image('winBackground', 'assets/winbg.jpg');
+        game.load.image('rocket', 'assets/playerShip1_orange.png');
         game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
 
 
@@ -25,7 +25,6 @@ var win = {
         winnerText.align = 'center';
         playAgain = game.add.text(150, 400, 'Play again?', { fontSize: '40px', fill: '#33FF33' });
         playAgain.font = 'Press Start 2P';
-        // playAgain.align = 'center';
         playAgain.inputEnabled = true;
         playAgain.input.useHandCursor = true;
         playAgain.events.onInputDown.add(down, this);
@@ -33,14 +32,6 @@ var win = {
         winnerText.body.velocity.setTo(200, 200);
         winnerText.body.collideWorldBounds = true;
         winnerText.body.bounce.set(1);
-
-    // text2.body.velocity.setTo(-100, -100);
-    // text2.body.collideWorldBounds = true;
-    // text2.body.bounce.set(1);
-
-
-
-
      },
 
      update: function(){

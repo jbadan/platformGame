@@ -1,23 +1,11 @@
 /*TO DO LEVEL 1:
-put creating info in JSON file
 lives
     -change counter to images
-high score
-    -display above current score
-    -store in local storage
-enemies:
-    different types (robot)
 sound:
     collect key
     rocket take off
     background music?
     add music/sound mute toggle
-
-CURRENT BUGS:
--death animation
--time delay for restart after death sound
--spikes take multiple lives
-
 */
 
 

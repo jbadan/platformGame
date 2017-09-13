@@ -9,8 +9,8 @@ WebFontConfig = {
 
 var end = {
     preload: function(){
-        game.load.image('endBackground', 'img/bgEnd.jpg');
-        game.load.image('retry', 'img/retry_logo.png');
+        game.load.image('endBackground', 'assets/bgEnd.jpg');
+        game.load.image('retry', 'assets/retry_logo.png');
         game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
         var endText = null;
 

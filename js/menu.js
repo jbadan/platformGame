@@ -11,8 +11,8 @@ var sprite;
 
 var menu = {
     preload: function(){
-        game.load.image('startBackground', 'img/bgStart.jpg');
-        game.load.image('start', 'img/start.png');
+        game.load.image('startBackground', 'assets/bgStart.jpg');
+        game.load.image('start', 'assets/start.png');
         game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
         var instructions = null;
 
