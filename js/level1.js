@@ -259,7 +259,7 @@ var level1 = {
         this.game.add.existing(alienThatMoves);
         aliensThatMoveGroup.add(alienThatMoves);
 
-        // starter score/hearts/stars
+        // HUD display
         this.game.add.image(16, 45, 'star');
         this.game.add.image(16, 75, 'keyDisabled');
 

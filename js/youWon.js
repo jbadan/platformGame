@@ -27,7 +27,7 @@ var win = {
         playAgain.font = 'Press Start 2P';
         playAgain.inputEnabled = true;
         playAgain.input.useHandCursor = true;
-        playAgain.events.onInputDown.add(down, this);
+        playAgain.events.onInputDown.add(goToMenu, this);
         game.physics.arcade.enable([ winnerText, playAgain ]);
         winnerText.body.velocity.setTo(200, 200);
         winnerText.body.collideWorldBounds = true;
@@ -43,7 +43,7 @@ var win = {
      }
 }
 
-function down(){
+function goToMenu(){
     this.state.start('menu');
 
 }
