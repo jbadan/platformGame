@@ -9,6 +9,8 @@ WebFontConfig = {
 var filter;
 var sprite;
 var playerSelected; 
+var astroBox;
+var roboBox; 
 
 var menu = {
     preload: function(){
@@ -42,16 +44,24 @@ var menu = {
         this.state.start('level1');
     },
     selectPlayerAstro: function(){
-        if(playerSelected == undefined){
+        if(playerSelected == 'robot'){
+            roboBox.destroy();
             playerSelected = 'astronaut'; 
-            game.add.image(180, 580, 'box');
-        }else if(playerSelected == 'robot'){
-            
+            astroBox = game.add.image(180, 580, 'box');
+        }else{
+            playerSelected = 'astronaut'; 
+            astroBox = game.add.image(180, 580, 'box'); 
         }
     },
     selectPlayerRobot: function(){
-        playerSelected = 'robot'; 
-        game.add.image(380, 580, 'box');
+        if(playerSelected == 'astronaut'){
+            playerSelected = 'robot'; 
+            astroBox.destroy();
+            roboBox = game.add.image(380, 580, 'box');
+        }else{
+            playerSelected = 'robot'; 
+            roboBox = game.add.image(380, 580, 'box');
+        }
     }
 }
 

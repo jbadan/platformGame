@@ -108,7 +108,7 @@ var level1 = {
         game.load.spritesheet('alienSprite', 'assets/alienSpritesheet.png', 90, 93);
         game.load.spritesheet('robotSprite', 'assets/spritesheet_80.png', 168, 161);
         game.load.spritesheet('astronaut', 'assets/astroSpritesheet.png', 83, 86);
-        game.load.spritesheet('robot', 'assets/robotSprite.png', 80, 78);
+        game.load.spritesheet('robot', 'assets/robotSprite.png', 90, 88);
 
         game.load.audio('jumpNoise', 'assets/sound/jump.wav');
         game.load.audio('killNoise', 'assets/sound/hit.wav');
@@ -219,16 +219,24 @@ var level1 = {
         weapon.fireRate = 1000;
 
         // make astronaut
-        player = game.add.sprite(25, 650, 'astronaut');
-        game.physics.arcade.enable(player);
+        if(playerSelected == 'astronaut'){
+            player = game.add.sprite(25, 650, 'astronaut');
+            player.animations.add('left', [1, 7, 13, 19, 25, 31, 37], 10, true);
+            player.animations.add('right', [0, 6, 12, 18, 24, 30, 36], 10, true);
+            player.animations.add('shootRight', [2, 8, 14, 20, 26, 32, 38], 5, true);
+            player.animations.add('shootLeft', [3, 9, 15, 21, 27, 33, 39], 5, true);
+        }else{
+            player = game.add.sprite(25, 650, 'robot');
+            player.animations.add('left', [38,37,36,35,34], 10, true);
+            player.animations.add('right', [16,17,18,19], 10, true);
+            player.animations.add('shootRight', [26,27,28,29,30,31,32,39,40,41,42,43,44], 10, true);
+            player.animations.add('shootLeft', [51,50,49,48,47], 10, true);
+        }
+         game.physics.arcade.enable(player);
         player.anchor.set(0.5);
         player.body.bounce.y = 0.2;
         player.body.gravity.y = 300;
         player.body.collideWorldBounds = true;
-        player.animations.add('left', [1, 7, 13, 19, 25, 31, 37], 10, true);
-        player.animations.add('right', [0, 6, 12, 18, 24, 30, 36], 10, true);
-        player.animations.add('shootRight', [2, 8, 14, 20, 26, 32, 38], 5, true);
-        player.animations.add('shootLeft', [3, 9, 15, 21, 27, 33, 39], 5, true);
 
         weapon.trackSprite(player, 0, 0, false);
         cursors = this.input.keyboard.createCursorKeys();
