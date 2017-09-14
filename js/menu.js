@@ -38,7 +38,8 @@ var menu = {
 
 
 function createText(){
-    instructions = game.add.text(50, 200, 'Move the astronaut using arrow keys.\n Collect stars while avoiding\n aliens and obstacles.\n Press the spacebar to shoot.', { fontSize: '20px', fill: '#ffffff' });
+    instructions = game.add.text(50, 200, 'Control your player using arrow keys.\n Collect stars while avoiding\n aliens and obstacles.\n Press the spacebar to shoot.', { fontSize: '20px', fill: '#ffffff' });
     instructions.font = 'Press Start 2P';
     instructions.align = 'center';
 }
+

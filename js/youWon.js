@@ -3,6 +3,7 @@
 var rocket;
 var winnerText;
 var playAgain;
+var a = 1;
 
 var win = {
     preload: function(){
@@ -18,32 +19,58 @@ var win = {
         this.camera.flash('#000000');
         game.add.sprite(0, 0, 'winBackground');
         rocket = game.add.sprite(0, 700, 'rocket');
+        rocket.anchor.setTo(.5, .5);
+        rocket.angle = 45;
         rocket.animations.add('flyToEarth');
         rocket.animations.play('flyToEarth', 15, true);
-        winnerText = game.add.text(150, 200, 'You won!', { fontSize: '60px', fill: '#ffffff' });
-         winnerText.font = 'Press Start 2P';
+
+        winnerText = game.add.text(200, 200, 'You won!\nScore: '+score, { fontSize: '40px', fill: '#ffffff' });
+        winnerText.font = 'Press Start 2P';
         winnerText.align = 'center';
+        game.time.events.add(Phaser.Timer.SECOND * 5, removeWinnerText, this);
+
         playAgain = game.add.text(150, 400, 'Play again?', { fontSize: '40px', fill: '#33FF33' });
         playAgain.font = 'Press Start 2P';
         playAgain.inputEnabled = true;
         playAgain.input.useHandCursor = true;
         playAgain.events.onInputDown.add(goToMenu, this);
-        game.physics.arcade.enable([ winnerText, playAgain ]);
-        winnerText.body.velocity.setTo(200, 200);
-        winnerText.body.collideWorldBounds = true;
-        winnerText.body.bounce.set(1);
+        addTween(playAgain);
+        addTween(winnerText);
      },
 
      update: function(){
         rocket.x +=2;
         rocket.y -=.7;
-        if(rocket.x == 680){
+        game.time.events.loop(Phaser.Timer.SECOND, scaleRocket, this);
+        if(rocket.x == 780){
             rocket.kill();
         }
      }
 }
+function scaleRocket(){
+    a -= .001; 
+    rocket.scale.setTo(a ,a);
+    if(a <= 0){
+        rocket.scale.setTo(.1, .1);
+    }
+}
+
+function removeWinnerText(){
+    winnerText.setText("");
+}
+
+function addTween(item){
+    var tween = game.add.tween(item);
+    tween.to({y:item.y + 6}, 800, Phaser.Easing.Sinusoidal.InOut);
+    tween.yoyo(true);
+    tween.loop();
+    tween.start();
+}
 
 function goToMenu(){
+    hasKey = false;
+    score = 0;
+    starPickupCount = 0;
+    lives = 3;
     this.state.start('menu');
-
 }

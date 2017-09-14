@@ -297,7 +297,6 @@ var level1 = {
             player.animations.play('right');
         }else{
             player.animations.stop();
-            player.frame = 0;
         }
         if (cursors.up.isDown && player.body.touching.down){
             player.body.velocity.y = -350;
@@ -312,7 +311,7 @@ var level1 = {
                 weapon.fireAngle = Phaser.ANGLE_RIGHT;
                 player.animations.play('shootRight');
                 weapon.fire();
-            }else{
+            }else {
                 weapon.fireAngle = Phaser.ANGLE_RIGHT;
                 player.animations.play('shootRight');
                 weapon.fire();

@@ -26,7 +26,8 @@ var Ufo = function(game, x, y){
     this.game.physics.arcade.enableBody(this);
     this.game.physics.enable(this);
     this.checkWorldBounds = true;
-    alienWeapon = game.add.weapon(2, 'bullet');
+
+    alienWeapon = game.add.weapon(2, 'enemyBullet');
     alienWeapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
     alienWeapon.bulletSpeed = 100;
     alienWeapon.bulletSpeedVariance = 50;
@@ -54,6 +55,7 @@ var Ufo = function(game, x, y){
 var player;
 var weapon;
 var fireButton;
+var enemyBullet;
 var bullet;
 var asteroidsGroup;
 var ufoGroup;
@@ -64,6 +66,7 @@ var level2 = {
       game.load.image('level2Background', 'assets/level2bg.jpg');  
       game.load.image('rocket', 'assets/playerShip1_orange.png');
       game.load.image('bullet', 'assets/laserPurple.png');
+      game.load.image('enemyBullet', 'assets/laserRedBurst_50.png');
       game.load.audio('killNoise', 'assets/sound/hit.wav');
 
       game.load.spritesheet('asteroid', 'assets/asteroid.png', 128, 128);
@@ -141,9 +144,13 @@ var level2 = {
         game.physics.arcade.overlap(weapon.bullets, asteroidsGroup, this.killAsteroid, null, this);
         game.physics.arcade.overlap(player, ufoGroup, this.killPlayer, null, this);
         game.physics.arcade.overlap(weapon.bullets, ufoGroup, this.killUfo, null, this);
-        game.physics.arcade.overlap(alienWeapon.bullets, player, this.killPlayer, null, this);
+        game.physics.arcade.overlap(alienWeapon.bullets, player, this.killPlayerBullet, null, this);
     },
     killPlayer: function(player, asteroid){
+         game.sound.play('deathNoise');           
+        loseLife();
+    },
+       killPlayerBullet: function(alienBullet, player){
          game.sound.play('deathNoise');           
         loseLife();
     },
