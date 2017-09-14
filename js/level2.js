@@ -11,11 +11,10 @@ var Asteroid = function(game, x, y){
     this.outOfBoundsKill = true;
     this.body.angularVelocity = 20;
 };
-    Asteroid.prototype = Object.create(Phaser.Sprite.prototype);
-    Asteroid.prototype.constructor = Asteroid;
-    Asteroid.prototype.update= function() {
+Asteroid.prototype = Object.create(Phaser.Sprite.prototype);
+Asteroid.prototype.constructor = Asteroid;
+Asteroid.prototype.update= function() {
         this.body.velocity.x = 0;
-        // this.body.angularVelocity = this.game.rnd.integerInRange(100, this.maxAngularVel);
     };
 
 var Ufo = function(game, x, y){
@@ -27,13 +26,29 @@ var Ufo = function(game, x, y){
     this.game.physics.arcade.enableBody(this);
     this.game.physics.enable(this);
     this.checkWorldBounds = true;
+    alienWeapon = game.add.weapon(2, 'bullet');
+    alienWeapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+    alienWeapon.bulletSpeed = 100;
+    alienWeapon.bulletSpeedVariance = 50;
+    alienWeapon.fireRate = 20;
+    alienWeapon.bulletAngleOffset = 180;
+    alienWeapon.fireAngle = 90;
+    alienWeapon.autofire = true;
+    alienWeapon.trackSprite(this, 0, 0, false);
 
 };
     Ufo.prototype = Object.create(Phaser.Sprite.prototype);
     Ufo.prototype.constructor = Ufo;
     Ufo.prototype.update= function() {
-        this.body.velocity.x = 0;
-        // this.body.angularVelocity = this.game.rnd.integerInRange(100, this.maxAngularVel);
+        ufoGroup.forEachAlive(function(ufo){
+            ufo.body.velocity.y = game.rnd.integerInRange(0, 20);
+            ufo.body.velocity.x = 20;
+            if(ufo.x >= 800){
+                ufo.x = 0; 
+            }
+        // if(this.alive == false){
+        //     alienWeapon.autofire = false;
+         })
     };
 
 var player;
@@ -161,12 +176,12 @@ function createUfo(){
     var newUfo = new Ufo(this.game, x, y, 'ufo', 0);
     game.add.existing(newUfo); 
     ufoGroup.add(newUfo); 
-    alienWeapon = game.add.weapon(2, 'bullet');
-    alienWeapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-    alienWeapon.bulletSpeed = 100;
-    alienWeapon.fireRate = 20;
-    alienWeapon.bulletAngleOffset = 180;
-    alienWeapon.fireAngle = 90;
-    alienWeapon.autofire = true;
-    alienWeapon.trackSprite(newUfo, 0, 0, false);
+    // alienWeapon = game.add.weapon(2, 'bullet');
+    // alienWeapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+    // alienWeapon.bulletSpeed = 100;
+    // alienWeapon.fireRate = 20;
+    // alienWeapon.bulletAngleOffset = 180;
+    // alienWeapon.fireAngle = 90;
+    // alienWeapon.autofire = true;
+    // alienWeapon.trackSprite(newUfo, 0, 0, false);
 }

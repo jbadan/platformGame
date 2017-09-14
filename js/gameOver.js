@@ -43,4 +43,7 @@ function createTextEnd(){
     endText = game.add.text(50, 200, 'Game Over!', { fontSize: '70px', fill: '#ffffff' });
     endText.font = 'Press Start 2P';
     endText.align = 'center';  
+    endScoreText = game.add.text(200, 100, 'Score: '+score, { fontSize: '40px', fill: 'green' });
+    endScoreText.font = 'Press Start 2P';
+    endScoreText.align = 'center';  
 }

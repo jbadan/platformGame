@@ -34,7 +34,6 @@ AlienMoving.prototype.update = function(){
     }
 };
 
-//THIS IS NOT WORKING - or maybe the animation is just too fast? idk
 AlienMoving.prototype.die = function () {
     this.body.enable = false;
     this.animations.play('die').onComplete.addOnce(function () {
@@ -265,8 +264,8 @@ var level1 = {
 
         scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '22px', fill: '#ffffff' });
         starCountText = game.add.text(42, 45, 'x 0', { fontSize: '22px', fill: '#ffffff' });
-        livesText = game.add.text(660, 40, 'Lives: 3', { fontSize: '20px', fill: '#ffffff' });
-        highScoreText = game.add.text(660, 16, 'High score: '+localStorage.highScore, { fontSize: '20px', fill: '#ffffff' });
+        livesText = game.add.text(640, 40, 'Lives: 3', { fontSize: '20px', fill: '#ffffff' });
+        highScoreText = game.add.text(640, 16, 'High score: '+localStorage.highScore, { fontSize: '20px', fill: '#ffffff' });
     },
 
     update: function() {
@@ -361,7 +360,7 @@ var level1 = {
     collectKey: function(player, key){
         key.kill();
         hasKey = true; 
-        this.game.add.image(16, 80, 'key');
+        this.game.add.image(16, 75, 'key');
         //add rocket
         var bgDecoration = game.add.group();
         rocket = bgDecoration.create(290, 275, 'rocket');
@@ -390,7 +389,7 @@ var level1 = {
     rocketLaunch: function(player, rocket){
         rocket.body.velocity.y = -500;
         player.kill();
-        game.time.events.add(Phaser.Timer.SECOND * 3, goToWinScreen, this);
+        game.time.events.add(Phaser.Timer.SECOND * 2, goToLevel2, this);
     }
 }
 
@@ -416,7 +415,11 @@ function increaseScore(){
 
 function resetPlayer(){
     player.kill();
-    player.reset(25, 650);
+    if(game.state.current == 'level1'){
+        player.reset(25, 650);
+    }else if(game.state.current == 'level2'){
+        player.reset(290, 750);
+    }
 }
 
 function resetToStart(){
@@ -425,7 +428,7 @@ function resetToStart(){
     hasKey = false;
     score = 0;
     starPickupCount = 0;
-    game.add.image(16, 80, 'keyDisabled');
+    game.add.image(16, 75, 'keyDisabled');
     lives = 3;
 
 }
@@ -434,6 +437,6 @@ function fadeComplete(){
     game.state.start('end');
 }
 
-function goToWinScreen(){
-    game.state.start('win');
+function goToLevel2(){
+    game.state.start('level2');
 }

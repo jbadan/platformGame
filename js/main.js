@@ -17,7 +17,7 @@ game.state.add('level1', level1);
 game.state.add('level2', level2);
 game.state.add('end', end); 
 game.state.add('win', win);
-game.state.start('level2');
+game.state.start('menu');
 
 
 
