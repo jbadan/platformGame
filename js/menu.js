@@ -11,6 +11,7 @@ var sprite;
 var playerSelected; 
 var astroBox;
 var roboBox; 
+var choosePlayerText;
 
 var menu = {
     preload: function(){
@@ -28,7 +29,7 @@ var menu = {
         game.add.sprite(0, 0, 'startBackground');
         createText();
         // //start button
-        var start = this.add.button(180, 350, 'start', this.startGame, this);
+        var start = this.add.button(180, 450, 'start', this.startGame, this);
         var tween = game.add.tween(start);
         tween.to({y:start.y + 6}, 800, Phaser.Easing.Sinusoidal.InOut);
         tween.yoyo(true);
@@ -37,8 +38,8 @@ var menu = {
         start.inputEnabled = true;
         start.input.useHandCursor = true;
 
-        game.add.button(200, 600, 'astronaut', this.selectPlayerAstro, this);
-        game.add.button(400, 600, 'robot', this.selectPlayerRobot, this);
+        game.add.button(260, 350, 'astronaut', this.selectPlayerAstro, this);
+        game.add.button(460, 350, 'robot', this.selectPlayerRobot, this);
      },
     startGame: function(){
         this.state.start('level1');
@@ -47,28 +48,31 @@ var menu = {
         if(playerSelected == 'robot'){
             roboBox.destroy();
             playerSelected = 'astronaut'; 
-            astroBox = game.add.image(180, 580, 'box');
+            astroBox = game.add.image(240, 335, 'box');
         }else{
             playerSelected = 'astronaut'; 
-            astroBox = game.add.image(180, 580, 'box'); 
+            astroBox = game.add.image(240, 335, 'box'); 
         }
     },
     selectPlayerRobot: function(){
         if(playerSelected == 'astronaut'){
             playerSelected = 'robot'; 
             astroBox.destroy();
-            roboBox = game.add.image(380, 580, 'box');
+            roboBox = game.add.image(440, 335, 'box');
         }else{
             playerSelected = 'robot'; 
-            roboBox = game.add.image(380, 580, 'box');
+            roboBox = game.add.image(440, 335, 'box');
         }
     }
 }
 
 
 function createText(){
-    instructions = game.add.text(50, 200, 'Control your player using arrow keys.\n Collect stars while avoiding\n aliens and obstacles.\n Press the spacebar to shoot.', { fontSize: '20px', fill: '#ffffff' });
+    instructions = game.add.text(50, 100, 'Control your player using arrow keys.\n Collect stars while avoiding\n aliens and obstacles.\n Press the spacebar to shoot.', { fontSize: '20px', fill: '#ffffff' });
     instructions.font = 'Press Start 2P';
     instructions.align = 'center';
+    choosePlayerText = game.add.text(180, 300, 'Choose your player below:', { fontSize: '18px', fill: '#ffffff' });
+    choosePlayerText.font = 'Press Start 2P';
+    choosePlayerText.align = 'center';
 }
 

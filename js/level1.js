@@ -108,7 +108,7 @@ var level1 = {
         game.load.spritesheet('alienSprite', 'assets/alienSpritesheet.png', 90, 93);
         game.load.spritesheet('robotSprite', 'assets/spritesheet_80.png', 168, 161);
         game.load.spritesheet('astronaut', 'assets/astroSpritesheet.png', 83, 86);
-        game.load.spritesheet('robot', 'assets/robotSprite.png', 90, 88);
+        game.load.spritesheet('robot', 'assets/robotSprite.png', 75, 74.4);
 
         game.load.audio('jumpNoise', 'assets/sound/jump.wav');
         game.load.audio('killNoise', 'assets/sound/hit.wav');
