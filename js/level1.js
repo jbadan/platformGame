@@ -62,7 +62,10 @@ var button;
 
 var score = 0;
 var starPickupCount = 0;
-var livesText; 
+var heartGroup;
+var heart1;
+var heart2;
+var heart3; 
 var lives = 3; 
 var scoreText;
 var starCountText;
@@ -94,7 +97,7 @@ var level1 = {
         game.load.image('key', 'assets/hud_keyRed.png');
         game.load.image('keyDisabled', 'assets/hud_keyRed_disabled.png');
         game.load.image('spikes', 'assets/spikes.png');
-        game.load.image('heartFull', 'assets/hud_heartFull.png');
+        game.load.image('heartFull', 'assets/hud_heartFull_1_50.png');
         game.load.image('heartEmpty', 'assets/hud_heartEmpty.png');
         game.load.image('buttonPressed', 'assets/buttonRed_pressed_50.png');
         game.load.image('button', 'assets/buttonRed_50.png');
@@ -261,10 +264,13 @@ var level1 = {
         // HUD display
         this.game.add.image(16, 45, 'star');
         this.game.add.image(16, 75, 'keyDisabled');
+        heartGroup = game.add.group();
+        heart1 = heartGroup.create(640, 40, 'heartFull');
+        heart2 = heartGroup.create(670, 40, 'heartFull');
+        heart3 = heartGroup.create(700, 40, 'heartFull');
 
         scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '22px', fill: '#ffffff' });
         starCountText = game.add.text(42, 45, 'x 0', { fontSize: '22px', fill: '#ffffff' });
-        livesText = game.add.text(640, 40, 'Lives: 3', { fontSize: '20px', fill: '#ffffff' });
         highScoreText = game.add.text(640, 16, 'High score: '+localStorage.highScore, { fontSize: '20px', fill: '#ffffff' });
     },
 
@@ -395,7 +401,13 @@ var level1 = {
 
 function loseLife(){
     lives -=1;
-    livesText.text = 'Lives: '+lives;
+    if(lives == 2){
+        heart3.kill();
+    }else if(lives == 1){
+        heart2.kill();
+    }else if(lives == 0){
+        heart1.kill();
+    }
      if(lives == 0){
         resetToStart();
     }else{

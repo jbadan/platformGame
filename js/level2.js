@@ -59,6 +59,10 @@ var ufoGroup;
 var alienWeapon; 
 var firingTimer = 0;
 var livingEnemies = [];
+var heartGroup;
+var heart1;
+var heart2;
+var heart3;
 
 var level2 = {
     preload: function() {
@@ -66,6 +70,8 @@ var level2 = {
       game.load.image('rocket', 'assets/playerShip1_orange.png');
       game.load.image('bullet', 'assets/laserPurple.png');
       game.load.image('enemyBullet', 'assets/laserRedBurst_50.png');
+      game.load.image('heartFull', 'assets/hud_heartFull_1_50.png');
+      game.load.image('heartEmpty', 'assets/hud_heartEmpty.png');
       game.load.audio('killNoise', 'assets/sound/hit.wav');
 
       game.load.spritesheet('asteroid', 'assets/asteroid.png', 128, 128);
@@ -84,12 +90,10 @@ var level2 = {
         weapon.fireRate = 60;
         weapon.bulletAngleVariance = 10;
 
-
         player = game.add.sprite(420, 710, 'rocket');
         game.physics.arcade.enable(player);
         player.anchor.set(0.5);
         player.body.collideWorldBounds = true;
-
 
         weapon.trackSprite(player, 0, 0, false);
         cursors = this.input.keyboard.createCursorKeys();
@@ -108,8 +112,18 @@ var level2 = {
         }
 
         // HUD display
+        heartGroup = game.add.group();
+        if(lives == 3){
+            heart1 = heartGroup.create(640, 40, 'heartFull');
+            heart2 = heartGroup.create(670, 40, 'heartFull');
+            heart3 = heartGroup.create(700, 40, 'heartFull');
+        }else if(lives ==2){
+            heart1 = heartGroup.create(640, 40, 'heartFull');
+            heart2 = heartGroup.create(670, 40, 'heartFull');
+        }else if(lives == 1){
+            heart1 = heartGroup.create(640, 40, 'heartFull');
+        }
         scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '22px', fill: '#ffffff' });
-        livesText = game.add.text(640, 40, 'Lives: 3', { fontSize: '20px', fill: '#ffffff' });
         highScoreText = game.add.text(640, 16, 'High score: '+localStorage.highScore, { fontSize: '20px', fill: '#ffffff' });
     },
 
@@ -160,6 +174,10 @@ var level2 = {
     },
     killUfo: function(player, ufo){
         ufo.kill();
+        var totalUfos = ufoGroup.length;
+        if(totalUfos <= 10){
+             createUfo();
+        }
         game.sound.play('killNoise');
         increaseScore(); 
     },
@@ -168,7 +186,7 @@ var level2 = {
         loseLife();
 
     }
-    }
+}
       
 function createAsteroid() {
         var x = game.rnd.integerInRange(100, 700);

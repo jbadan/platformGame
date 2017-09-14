@@ -1,15 +1,4 @@
-/*TO DO LEVEL 1:
-lives
-    -change counter to images
-sound:
-    collect key
-    rocket take off
-    background music?
-    add music/sound mute toggle
-*/
-
-
-//BEGINS GAME
+//STATE MANAGER
 
 var game = new Phaser.Game(800, 800, 'phaser');
 game.state.add('menu', menu);  
