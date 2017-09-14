@@ -8,11 +8,15 @@ WebFontConfig = {
 };
 var filter;
 var sprite;
+var playerSelected; 
 
 var menu = {
     preload: function(){
         game.load.image('startBackground', 'assets/bgStart.jpg');
         game.load.image('start', 'assets/start.png');
+        game.load.image('robot', 'assets/robotIdle.png');
+        game.load.image('astronaut', 'assets/astroIdle.png');
+        game.load.image('box', 'assets/selectorBox.png');
         game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
         var instructions = null;
 
@@ -30,9 +34,24 @@ var menu = {
         tween.start();
         start.inputEnabled = true;
         start.input.useHandCursor = true;
+
+        game.add.button(200, 600, 'astronaut', this.selectPlayerAstro, this);
+        game.add.button(400, 600, 'robot', this.selectPlayerRobot, this);
      },
     startGame: function(){
         this.state.start('level1');
+    },
+    selectPlayerAstro: function(){
+        if(playerSelected == undefined){
+            playerSelected = 'astronaut'; 
+            game.add.image(180, 580, 'box');
+        }else if(playerSelected == 'robot'){
+            
+        }
+    },
+    selectPlayerRobot: function(){
+        playerSelected = 'robot'; 
+        game.add.image(380, 580, 'box');
     }
 }
 

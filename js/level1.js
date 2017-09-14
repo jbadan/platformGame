@@ -108,7 +108,8 @@ var level1 = {
         game.load.spritesheet('alienSprite', 'assets/alienSpritesheet.png', 90, 93);
         game.load.spritesheet('robotSprite', 'assets/spritesheet_80.png', 168, 161);
         game.load.spritesheet('astronaut', 'assets/astroSpritesheet.png', 83, 86);
-        
+        game.load.spritesheet('robot', 'assets/robotSprite.png', 80, 78);
+
         game.load.audio('jumpNoise', 'assets/sound/jump.wav');
         game.load.audio('killNoise', 'assets/sound/hit.wav');
         game.load.audio('starNoise', 'assets/sound/star.wav');
@@ -137,6 +138,21 @@ var level1 = {
         var ground = platforms.create(0, game.world.height - 40, 'ground');
         ground.scale.setTo(4, 2);
         ground.body.immovable = true;
+        //spikes
+        spikesGroup = game.add.group();
+        spikesGroup.enableBody = true;
+        spikesGroup.allowGravity = false; 
+
+        var spike = spikesGroup.create(600, 320, 'spikes');
+        spike.body.immovable = true;
+        spike = spikesGroup.create(270, 727, 'spikes');
+        spike.body.immovable = true;
+        spike = spikesGroup.create(300, 727, 'spikes');
+        spike.body.immovable = true;
+        spike = spikesGroup.create(330, 727, 'spikes');
+        spike.body.immovable = true;
+        spike = spikesGroup.create(360, 727, 'spikes');
+        spike.body.immovable = true;
 
         // platform ledges
         var ledge = platforms.create(200, 600, 'ground');
@@ -152,21 +168,6 @@ var level1 = {
         ledge = platforms.create(500, 150, 'ground');
         ledge.body.immovable = true;
 
-        //spikes
-        spikesGroup = game.add.group();
-        spikesGroup.enableBody = true;
-        spikesGroup.allowGravity = false; 
-
-        var spike = spikesGroup.create(600, 317, 'spikes');
-        spike.body.immovable = true;
-        spike = spikesGroup.create(270, 727, 'spikes');
-        spike.body.immovable = true;
-        spike = spikesGroup.create(300, 727, 'spikes');
-        spike.body.immovable = true;
-        spike = spikesGroup.create(330, 727, 'spikes');
-        spike.body.immovable = true;
-        spike = spikesGroup.create(360, 727, 'spikes');
-        spike.body.immovable = true;
         
         //button to turn off laser 
         var buttons = game.add.group();
