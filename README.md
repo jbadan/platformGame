@@ -25,9 +25,11 @@
 ### Unresolved Problems:
 * Collision detection bugs on level 2 with enemy bullets
 * Google fonts loading after text is created on first play
+* Player sprites have too much padding around the image, making the collision detection more sensitive than it should be. 
 
 ### Next Steps:
 * fix unresolved problems
+* continue testing for bugs 
 * add boss level 
 
 ### Resources: 

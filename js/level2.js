@@ -123,7 +123,7 @@ var level2 = {
         }else if(lives == 1){
             heart1 = heartGroup.create(640, 40, 'heartFull');
         }
-        scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '22px', fill: '#ffffff' });
+        scoreText = game.add.text(16, 16, 'Score: '+score, { fontSize: '22px', fill: '#ffffff' });
         highScoreText = game.add.text(640, 16, 'High score: '+localStorage.highScore, { fontSize: '20px', fill: '#ffffff' });
     },
 

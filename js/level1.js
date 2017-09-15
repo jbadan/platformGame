@@ -92,13 +92,11 @@ var level1 = {
         game.load.image('ground', 'assets/platform3.png');
         game.load.image('invisibleWall', 'assets/invisible_wall.png');
         game.load.image('star', 'assets/star.png');
-        game.load.image('alienIdleRight', 'assets/alienIdleRight.png');
         game.load.image('rocket', 'assets/playerShip1_orange.png');
         game.load.image('key', 'assets/hud_keyRed.png');
         game.load.image('keyDisabled', 'assets/hud_keyRed_disabled.png');
         game.load.image('spikes', 'assets/spikes.png');
         game.load.image('heartFull', 'assets/hud_heartFull_1_50.png');
-        game.load.image('heartEmpty', 'assets/hud_heartEmpty.png');
         game.load.image('buttonPressed', 'assets/buttonRed_pressed_50.png');
         game.load.image('button', 'assets/buttonRed_50.png');
         game.load.image('laser', 'assets/laserRight_50.png');
@@ -106,7 +104,6 @@ var level1 = {
         game.load.image('bullet', 'assets/laserPurple.png');
 
         game.load.spritesheet('alienSprite', 'assets/alienSpritesheet.png', 90, 93);
-        game.load.spritesheet('robotSprite', 'assets/spritesheet_80.png', 168, 161);
         game.load.spritesheet('astronaut', 'assets/astroSpritesheet.png', 83, 86);
         game.load.spritesheet('robot', 'assets/robotSprite.png', 75, 74.4);
 
@@ -115,8 +112,6 @@ var level1 = {
         game.load.audio('starNoise', 'assets/sound/star.wav');
         game.load.audio('deathNoise', 'assets/sound/sadTrombone.wav');
     },
-
-    array = [];
     
     create: function() {
         this.camera.flash('#000000');
