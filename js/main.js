@@ -7,13 +7,3 @@ game.state.add('level2', level2);
 game.state.add('end', end); 
 game.state.add('win', win);
 game.state.start('menu');
-
-
-
-/*Resources: 
-http://blog.kumansenu.com/2016/04/patrolling-enemy-ai-with-phaser/
-https://hacks.mozilla.org/2017/04/html5-games-workshop-make-a-platformer-game-with-javascript/
-http://kenney.nl/
-https://tutorialzine.com/2015/06/making-your-first-html5-game-with-phaser
-
-*/

@@ -115,6 +115,9 @@ var level1 = {
         game.load.audio('starNoise', 'assets/sound/star.wav');
         game.load.audio('deathNoise', 'assets/sound/sadTrombone.wav');
     },
+
+    array = [];
+    
     create: function() {
         this.camera.flash('#000000');
         //background
