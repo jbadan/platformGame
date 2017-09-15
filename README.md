@@ -2,13 +2,13 @@
 
 ### Platformer meets Asteroids Game:
 
-#### Choose between playing an astronaut or robot character. Dodge alien enemies and obstacles while collecting stars in order to reach your spaceship, then guide your spaceship home to Earth. [Play it here!](https://jbadan.github.io/platformGame/) 
+#### Choose between playing an astronaut or robot character. Dodge alien enemies and obstacles while collecting stars in order to reach your spaceship, then guide your spaceship through asteroids and flying enemies home to Earth. [Play it here!](https://jbadan.github.io/platformGame/) 
 
-![startScreen](assets/screenShots/startScreen.png); 
-![level1](assets/screenShots/level1.png);  
-![level2](assets/screenShots/level2.png);  
-![winScreen](assets/screenShots/winScreen.png);  
-![gameOver](assets/screenShots/gameOver.png);   
+![startScreen](assets/screenShots/startScreen.png) 
+![level1](assets/screenShots/level1.png)
+![level2](assets/screenShots/level2.png)  
+![winScreen](assets/screenShots/winScreen.png)  
+![gameOver](assets/screenShots/gameOver.png)  
 
 ----
 
