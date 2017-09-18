@@ -6,25 +6,20 @@ WebFontConfig = {
     }
 };
 
+var endText;
 
 var end = {
     preload: function(){
         game.load.image('endBackground', 'assets/bgEnd.jpg');
         game.load.image('retry', 'assets/retry_logo.png');
         game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
-        var endText = null;
 
     },
     create: function(){
         this.camera.flash('#000000');
         game.add.sprite(0, 0, 'endBackground');
-        
-        endText = game.add.text(50, 200, 'Game Over!', { fontSize: '70px', fill: '#ffffff' });
-        endText.font = 'Press Start 2P';
-        endText.align = 'center';   
-        addTween(endText);
-
-        var retry = this.add.button(180, 350, 'retry', this.RestartGame, this);
+        game.time.events.add(Phaser.Timer.SECOND, makeEndText, this);
+            var retry = this.add.button(180, 350, 'retry', this.RestartGame, this);
         addTween(retry);
         retry.inputEnabled = true;
         retry.input.useHandCursor = true;
@@ -38,6 +33,13 @@ var end = {
         lives = 3;
         this.state.start('level1');
     }
+}
+
+function makeEndText(){
+    endText = game.add.text(50, 200, 'Game Over!', { fontSize: '70px', fill: '#ffffff' });
+    endText.font = 'Press Start 2P';
+    endText.align = 'center';   
+    addTween(endText);
 }
 
 function addTween(item){
