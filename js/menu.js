@@ -27,8 +27,7 @@ var menu = {
     create: function(){
         this.camera.flash('#000000');
         game.add.sprite(0, 0, 'startBackground');
-        createText();
-        // //start button
+        game.time.events.add(Phaser.Timer.SECOND, createText, this);
         var start = this.add.button(180, 450, 'start', this.startGame, this);
         var tween = game.add.tween(start);
         tween.to({y:start.y + 6}, 800, Phaser.Easing.Sinusoidal.InOut);
@@ -38,8 +37,8 @@ var menu = {
         start.inputEnabled = true;
         start.input.useHandCursor = true;
 
-        game.add.button(260, 350, 'astronaut', this.selectPlayerAstro, this);
-        game.add.button(460, 350, 'robot', this.selectPlayerRobot, this);
+        game.add.button(240, 350, 'astronaut', this.selectPlayerAstro, this);
+        game.add.button(440, 350, 'robot', this.selectPlayerRobot, this);
      },
     startGame: function(){
         this.state.start('level1');
@@ -48,20 +47,20 @@ var menu = {
         if(playerSelected == 'robot'){
             roboBox.destroy();
             playerSelected = 'astronaut'; 
-            astroBox = game.add.image(240, 335, 'box');
+            astroBox = game.add.image(220, 335, 'box');
         }else{
             playerSelected = 'astronaut'; 
-            astroBox = game.add.image(240, 335, 'box'); 
+            astroBox = game.add.image(220, 335, 'box'); 
         }
     },
     selectPlayerRobot: function(){
         if(playerSelected == 'astronaut'){
             playerSelected = 'robot'; 
             astroBox.destroy();
-            roboBox = game.add.image(440, 335, 'box');
+            roboBox = game.add.image(420, 335, 'box');
         }else{
             playerSelected = 'robot'; 
-            roboBox = game.add.image(440, 335, 'box');
+            roboBox = game.add.image(420, 335, 'box');
         }
     }
 }

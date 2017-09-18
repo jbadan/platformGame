@@ -10,9 +10,6 @@ var win = {
         game.load.image('winBackground', 'assets/winbg.jpg');
         game.load.image('rocket', 'assets/playerShip1_orange.png');
         game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
-
-
-
     },
     create: function(){
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -23,21 +20,8 @@ var win = {
         rocket.angle = 45;
         rocket.animations.add('flyToEarth');
         rocket.animations.play('flyToEarth', 15, true);
-
-        winnerText = game.add.text(200, 200, 'You won!\nScore: '+score, { fontSize: '40px', fill: '#ffffff' });
-        winnerText.font = 'Press Start 2P';
-        winnerText.align = 'center';
-        game.time.events.add(Phaser.Timer.SECOND * 5, removeWinnerText, this);
-
-        playAgain = game.add.text(150, 400, 'Play again?', { fontSize: '40px', fill: '#33FF33' });
-        playAgain.font = 'Press Start 2P';
-        playAgain.inputEnabled = true;
-        playAgain.input.useHandCursor = true;
-        playAgain.events.onInputDown.add(goToMenu, this);
-        addTween(playAgain);
-        addTween(winnerText);
+        game.time.events.add(Phaser.Timer.SECOND, makeText, this);
      },
-
      update: function(){
         rocket.x +=2;
         rocket.y -=.7;
@@ -47,6 +31,23 @@ var win = {
         }
      }
 }
+
+function makeText(){
+    winnerText = game.add.text(200, 200, 'You won!\nScore: '+score, { fontSize: '40px', fill: '#ffffff' });
+    winnerText.font = 'Press Start 2P';
+    winnerText.align = 'center';
+    game.time.events.add(Phaser.Timer.SECOND * 5, removeWinnerText, this);
+
+    playAgain = game.add.text(150, 400, 'Play again?', { fontSize: '40px', fill: '#33FF33' });
+    playAgain.font = 'Press Start 2P';
+    playAgain.inputEnabled = true;
+    playAgain.input.useHandCursor = true;
+    playAgain.events.onInputDown.add(goToMenu, this);
+
+    addTween(playAgain);
+    addTween(winnerText);
+}
+
 function scaleRocket(){
     a -= .001; 
     rocket.scale.setTo(a ,a);

@@ -77,6 +77,8 @@ var level2 = {
       game.load.spritesheet('asteroid', 'assets/asteroid.png', 128, 128);
       game.load.spritesheet('ufo', 'assets/ufo.png', 48, 48);
 
+      game.load.audio('deathNoise', 'assets/sound/sadTrombone.wav');
+
     },
     create: function() {
         this.camera.flash('#000000');
@@ -160,10 +162,11 @@ var level2 = {
         game.physics.arcade.overlap(weapon.bullets, asteroidsGroup, this.killAsteroid, null, this);
         game.physics.arcade.overlap(player, ufoGroup, this.killPlayer, null, this);
         game.physics.arcade.overlap(weapon.bullets, ufoGroup, this.killUfo, null, this);
-        game.physics.arcade.overlap(enemyBullets, player, this.enemyHitsPlayer, null, this);
+        game.physics.arcade.collide(enemyBullets, player, this.enemyHitsPlayer, null, this);
     },
     killPlayer: function(player, asteroid){
-         game.sound.play('deathNoise');           
+         game.sound.play('deathNoise');
+         asteroid.kill();           
         loseLife();
     },
     killAsteroid: function(bullet, asteroid){
