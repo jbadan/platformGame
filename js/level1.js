@@ -1,13 +1,13 @@
 //EXTERNAL SPRITES
 
-//alien sprites 
+//alien sprites
 function AlienMoving(game, x, y){
     Phaser.Sprite.call(this, game, x, y, 'alienSprite');
     // anchor
     this.anchor.set(0.5);
     // animation
     this.animations.add('patrolRight', [12,13,14,15,16,17,18,19,20,21,22,23], 8, true);
-    this.animations.add('patrolLeft', [0,1,2,3,4,5,6,7,8,9,10,11], 8, true); 
+    this.animations.add('patrolLeft', [0,1,2,3,4,5,6,7,8,9,10,11], 8, true);
     this.animations.add('die', [24,25], .1);
     this.animations.play('patrolRight');
 
@@ -24,11 +24,11 @@ AlienMoving.prototype.constructor = AlienMoving;
 AlienMoving.prototype.update = function(){
     if (this.body.touching.right || this.body.blocked.right) {
         // turn left
-        this.body.velocity.x = -AlienMoving.SPEED; 
+        this.body.velocity.x = -AlienMoving.SPEED;
         this.animations.play('patrolLeft');
     }
     else if (this.body.touching.left || this.body.blocked.left) {
-        this.body.velocity.x = AlienMoving.SPEED; 
+        this.body.velocity.x = AlienMoving.SPEED;
         // turn right
         this.animations.play('patrolRight');
     }
@@ -47,37 +47,37 @@ AlienMoving.prototype.die = function () {
 var player;
 var platforms;
 var cursors;
-var spikesGroup; 
-var lasers; 
-var laserBeam; 
+var spikesGroup;
+var lasers;
+var laserBeam;
 var weapon;
 var fireButton;
 var bullet;
 
 var stars;
 
-var key; 
+var key;
 var rocket;
-var button; 
+var button;
 
 var score = 0;
 var starPickupCount = 0;
 var heartGroup;
 var heart1;
 var heart2;
-var heart3; 
-var lives = 3; 
+var heart3;
+var lives = 3;
 var scoreText;
 var starCountText;
 var highScoreText;
-var hasKey = false; 
+var hasKey = false;
 localStorage.highScore;
 if(localStorage.highScore === undefined){
   localStorage.highScore = 0;
 }
 
 
-//GAMEPLAY MAIN STATE 
+//GAMEPLAY MAIN STATE
 var level1 = {
     preload: function() {
         game.load.image('background', 'assets/bg1.jpg');
@@ -112,7 +112,7 @@ var level1 = {
         game.load.audio('starNoise', 'assets/sound/star.wav');
         game.load.audio('deathNoise', 'assets/sound/sadTrombone.wav');
     },
-    
+
     create: function() {
         this.camera.flash('#000000');
         //background
@@ -131,7 +131,7 @@ var level1 = {
         //platform  group
         platforms = game.add.group();
         platforms.enableBody = true;
-        
+
         //ground
         var ground = platforms.create(0, game.world.height - 40, 'ground');
         ground.scale.setTo(4, 2);
@@ -139,7 +139,7 @@ var level1 = {
         //spikes
         spikesGroup = game.add.group();
         spikesGroup.enableBody = true;
-        spikesGroup.allowGravity = false; 
+        spikesGroup.allowGravity = false;
 
         var spike = spikesGroup.create(600, 320, 'spikes');
         spike.body.immovable = true;
@@ -166,8 +166,8 @@ var level1 = {
         ledge = platforms.create(500, 150, 'ground');
         ledge.body.immovable = true;
 
-        
-        //button to turn off laser 
+
+        //button to turn off laser
         var buttons = game.add.group();
         buttons.enableBody = true;
         game.physics.enable(buttons);
@@ -194,7 +194,7 @@ var level1 = {
         //make invisible walls to stop aliens
         walls = game.add.group();
         walls.enableBody = true;
-        walls.allowGravity = false; 
+        walls.allowGravity = false;
         walls.visible = false;
         var wall = walls.create(374, 433, 'invisibleWall');
         wall.body.immovable = true;
@@ -258,13 +258,13 @@ var level1 = {
         //moving aliens (extended sprite);
         aliensThatMoveGroup = game.add.group();
         aliensThatMoveGroup.enableBody = true;
-        var alienThatMoves = new AlienMoving(this.game, 400, 435, 'alienSprite', 0);  
+        var alienThatMoves = new AlienMoving(this.game, 400, 435, 'alienSprite', 0);
         this.game.add.existing(alienThatMoves);
         aliensThatMoveGroup.add(alienThatMoves);
-        alienThatMoves = new AlienMoving(this.game, 600, 310, 'alienSprite', 0);  
+        alienThatMoves = new AlienMoving(this.game, 600, 310, 'alienSprite', 0);
         this.game.add.existing(alienThatMoves);
         aliensThatMoveGroup.add(alienThatMoves);
-         alienThatMoves = new AlienMoving(this.game, 200, 235, 'alienSprite', 0);  
+         alienThatMoves = new AlienMoving(this.game, 200, 235, 'alienSprite', 0);
         this.game.add.existing(alienThatMoves);
         aliensThatMoveGroup.add(alienThatMoves);
 
@@ -338,7 +338,7 @@ var level1 = {
         laser.kill();
         laserBeam.kill();
         this.game.add.image(700, 320, 'buttonPressed');
-      }  
+      }
     },
 
     spikeOverlap: function(player, spike){
@@ -357,8 +357,8 @@ var level1 = {
         star.kill();
         increaseScore();
         game.sound.play('starNoise');
-        starPickupCount++; 
-        starCountText.text = 'x '+ starPickupCount; 
+        starPickupCount++;
+        starCountText.text = 'x '+ starPickupCount;
         if(starPickupCount>=6){
             //add key if all stars are collected
             var keys = game.add.group();
@@ -371,7 +371,7 @@ var level1 = {
 
     collectKey: function(player, key){
         key.kill();
-        hasKey = true; 
+        hasKey = true;
         this.game.add.image(16, 75, 'key');
         //add rocket
         var bgDecoration = game.add.group();
@@ -382,21 +382,21 @@ var level1 = {
     },
 
     killAlien: function(player, alien){
-        if(alien.body.touching.up){      
-            player.body.velocity.y = -200;  
-            alien.kill();         
+        if(alien.body.touching.up){
+            player.body.velocity.y = -200;
+            alien.kill();
             game.sound.play('killNoise');
             increaseScore();
-        }else{ 
-            game.sound.play('deathNoise');           
+        }else{
+            game.sound.play('deathNoise');
             loseLife();
         }
     },
     killAlienBullet: function(bullet, alien){
-        alien.kill(); 
-        bullet.kill();     
+        alien.kill();
+        bullet.kill();
         game.sound.play('killNoise');
-        increaseScore(); 
+        increaseScore();
     },
     rocketLaunch: function(player, rocket){
         rocket.body.velocity.y = -500;
@@ -451,7 +451,7 @@ function resetToStart(){
 
 }
 
-function fadeComplete(){ 
+function fadeComplete(){
     game.state.start('end');
 }
 

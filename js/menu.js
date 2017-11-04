@@ -8,13 +8,15 @@ WebFontConfig = {
 };
 var filter;
 var sprite;
-var playerSelected; 
+var playerSelected;
 var astroBox;
-var roboBox; 
+var roboBox;
 var choosePlayerText;
 
 var menu = {
     preload: function(){
+      game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    
         game.load.image('startBackground', 'assets/bgStart.jpg');
         game.load.image('start', 'assets/start.png');
         game.load.image('robot', 'assets/robotIdle.png');
@@ -46,20 +48,20 @@ var menu = {
     selectPlayerAstro: function(){
         if(playerSelected == 'robot'){
             roboBox.destroy();
-            playerSelected = 'astronaut'; 
+            playerSelected = 'astronaut';
             astroBox = game.add.image(220, 335, 'box');
         }else{
-            playerSelected = 'astronaut'; 
-            astroBox = game.add.image(220, 335, 'box'); 
+            playerSelected = 'astronaut';
+            astroBox = game.add.image(220, 335, 'box');
         }
     },
     selectPlayerRobot: function(){
         if(playerSelected == 'astronaut'){
-            playerSelected = 'robot'; 
+            playerSelected = 'robot';
             astroBox.destroy();
             roboBox = game.add.image(420, 335, 'box');
         }else{
-            playerSelected = 'robot'; 
+            playerSelected = 'robot';
             roboBox = game.add.image(420, 335, 'box');
         }
     }
@@ -74,4 +76,3 @@ function createText(){
     choosePlayerText.font = 'Press Start 2P';
     choosePlayerText.align = 'center';
 }
-
